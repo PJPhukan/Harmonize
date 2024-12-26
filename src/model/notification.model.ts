@@ -23,6 +23,9 @@ const notificationSchema = new Schema<Notification>({
     },
 
 
+},
+{
+    timestamps: true
 })
 
 const NotificationModel = (mongoose.models.Notification as mongoose.Model<Notification>) || (mongoose.model<Notification>("Notification", notificationSchema))

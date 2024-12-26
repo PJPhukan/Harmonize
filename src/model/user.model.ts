@@ -73,6 +73,9 @@ const userSchema = new Schema<User>({
 
     //TODO: Foreign key
 
+},
+{
+    timestamps: true
 })
 
 const UserModel = (mongoose.models.User as mongoose.Model<User>) || (mongoose.model<User>("User", userSchema))

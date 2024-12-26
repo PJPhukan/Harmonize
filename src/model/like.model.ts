@@ -16,6 +16,9 @@ const likeSchema = new Schema<Like>({
         ref: "User"
     }
 
+},
+{
+    timestamps: true
 })
 
 const LikeModel = (mongoose.models.Like as mongoose.Model<Like>) || (mongoose.model<Like>("User", likeSchema))

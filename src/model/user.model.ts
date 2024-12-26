@@ -16,10 +16,9 @@ const userSchema = new Schema<User>({
             "Please enter a valid email address"
         ]
     },
-    skill: [
-        {
+    skill: [{
             type: String,
-            required: [true, "Role is required"],
+            required: [true, "Skill is required"],
         }
     ],
     genres: [

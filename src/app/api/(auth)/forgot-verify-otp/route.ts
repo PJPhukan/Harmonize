@@ -1,0 +1,101 @@
+
+import { ApiResponse } from "@/helpers/ApiResponse";
+import { dbConnect } from "@/lib/dbConnection";
+import { UserModel } from "@/model/user.model";
+import { verifySchema } from "@/schemas/user.Schema";
+import { NextResponse } from "next/server";
+
+
+export async function POST(request: Request): Promise<NextResponse> {
+    await dbConnect()
+    try {
+        // Extract verification and username from the request body
+        const { email, code } = await request.json();
+
+        //decodeEmail
+        const decodeEmail = decodeURIComponent(email);
+
+        //validate verification code by zod
+        const validationResult = verifySchema.safeParse({ code })
+        let response: ApiResponse;
+
+
+        //if code is not valid then return error message 
+        if (!validationResult.success) {
+            const varificationCodeErrorMessage = validationResult.error.format().code || []
+
+
+            response = {
+                success: false,
+                message: "Please enter a valid verification code",
+                statusCode: 400
+            }
+            return NextResponse.json(response);
+        }
+
+        //find user in the database by username
+        const user = await UserModel.findOne({ email: decodeEmail });
+
+        //if user not exist then return with a error message
+        if (!user) {
+            response = {
+                success: false,
+                message: "User not found",
+                statusCode: 404
+            }
+            return NextResponse.json(response);
+        }
+
+        //verify verification code and check is time is out or not
+        const isValidVerificationCode = user.verifyCode === code;
+        const isCodeNoExpiry = new Date(user.verifyCodeExp) > new Date();
+
+        //if verification code is not valid  then return error message
+        if (!isValidVerificationCode) {
+            response = {
+                success: false,
+                message: "Incorrect verification code",
+                statusCode: 401
+            }
+            return NextResponse.json(response);
+        }
+
+        //if verification code  time is out then return error message
+        if (!isCodeNoExpiry) {
+            response = {
+                success: false,
+                message: "Verification code expired",
+                statusCode: 401
+            }
+            return NextResponse.json(response);
+        }
+
+
+
+        //If user exit or varification code or expiry code is valid then  update the is varified and return the response with success message
+        user.isVerified = true;
+        await user.save();
+
+        response = {
+            success: true,
+            message: "Reset password otp verified successfully",
+            statusCode: 200,
+            data: user
+        }
+        return NextResponse.json(response);
+
+    } catch (verifyError) {
+        console.error("Reset password otp error", verifyError);
+
+
+        const response: ApiResponse = {
+            success: false,
+            message: "Failed to verify otp",
+            statusCode: 500
+        }
+        return NextResponse.json(response);
+
+    }
+
+
+}

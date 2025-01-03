@@ -11,13 +11,19 @@ export async function POST(request: Request): Promise<NextResponse> {
     try {
 
         //Extract user details from the request body
-        const { name, email, password, dob } = await request.json();
+        const { name, email, password, day, month, year } = await request.json();
 
+        const combineDate = (y: string, m: string, d: string): Date => {
+            const year = parseInt(y);
+            const month = parseInt(m);
+            const day = parseInt(d);
+            return new Date(year, month - 1, day);
+        };
+        const dob = combineDate(year, month, day)
 
         //check if user already exists
         const existingUser = await UserModel.findOne({ $or: [{ email }, { dob }] })
 
-        console.log("Check user : " + existingUser)
 
         //generate varification code 
         let verificationCode = Math.floor(Math.random() * 900000).toString();
@@ -58,6 +64,7 @@ export async function POST(request: Request): Promise<NextResponse> {
                 //send varification email notification
                 const emailResponse = await varificationEmail({ email: email, username: name, otp: verificationCode });
 
+             
                 //if faild to send the email, return an error message
 
                 if (!emailResponse.success) {

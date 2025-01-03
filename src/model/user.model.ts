@@ -3,9 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const userSchema = new Schema<User>({
     name: {
         type: String,
-        required: [true, "Username is required"],
-        trim: true,
-        unique: true
+        required: [true, "Name is required"],
     },
     email: {
         type: String,
@@ -18,7 +16,6 @@ const userSchema = new Schema<User>({
     },
     skill: [{
             type: String,
-            required: [true, "Skill is required"],
         }
     ],
     genres: [
@@ -34,20 +31,16 @@ const userSchema = new Schema<User>({
     },
     bio: {
         type: String,
-        required: [true, "Bio is required"]
     },
     location: {
         city: {
             type: String,
-            required: [true, "Please provide a correct address"]
         },
         state: {
             type: String,
-            required: [true, "Please provide a correct address"]
         },
         country: {
             type: String,
-            required: [true, "Please provide a correct address"]
         }
     },
     verifyCode: {

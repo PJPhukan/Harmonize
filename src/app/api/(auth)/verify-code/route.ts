@@ -10,10 +10,10 @@ export async function POST(request: Request): Promise<NextResponse> {
     await dbConnect()
     try {
         // Extract verification and username from the request body
-        const { username, code } = await request.json();
+        const { email, code } = await request.json();
 
-        //decodeusername
-        const decodeUsername = decodeURIComponent(username);
+        //decodeEmail
+        const decodeEmail = decodeURIComponent(email);
 
         //validate verification code by zod
         const validationResult = verifySchema.safeParse({ code })
@@ -37,7 +37,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         }
 
         //find user in the database by username
-        const user = await UserModel.findOne({ username: decodeUsername });
+        const user = await UserModel.findOne({ email: decodeEmail });
 
         //if user not exist then return with a error message
         if (!user) {

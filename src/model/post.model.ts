@@ -22,8 +22,6 @@ const postSchema = new Schema<Post>(
             type: Schema.Types.ObjectId,
             ref: "User"
         }
-
-
     },
     {
         timestamps: true

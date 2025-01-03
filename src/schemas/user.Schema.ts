@@ -2,56 +2,44 @@ import { z } from 'zod'
 
 //sign up schema
 export const SignUpSchema = z.object({
-    username: z.string()
-        .min(3, "Username must be atleast 2 characters")
-        .max(15, "Username must be no more than 15 character")
-        .regex(/^[a-zA-Z0-9]+$/, "Username can only contain alphanumeric characters")
-    ,
-    fullname: z.string()
-        .min(3, "Fullname must be atleast 3 characters")
-        .max(50, "Fullname must be no more than 50 characters")
-    ,
+
+    name: z
+        .string()
+        .min(1, { message: "Name is required" })
+        .max(50, { message: "Name must be at most 50 characters" }),
     email: z
         .string()
-        .email({ message: "Invalid email address" })
-        .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please Enter a valid email"),
+        .email({ message: "Invalid email address" }),
+    password: z
+        .string()
+        .min(8, { message: "Password must be at least 8 characters" })
+        .regex(/[A-Z]/, { message: "Password must include at least one uppercase letter" })
+        .regex(/[a-z]/, { message: "Password must include at least one lowercase letter" })
+        .regex(/[0-9]/, { message: "Password must include at least one number" })
+        .regex(/[\W_]/, { message: "Password must include at least one special character" }),
+    day: z
+        .string(),
+    month: z
+        .string(),
+    year: z
+        .string()
+        .refine((year) => {
+            const currentYear = new Date().getFullYear();
+            return +year > currentYear - 100 && +year <= currentYear;
+        }, { message: "Invalid year range" }),
+    // dob: z.date()
 
-    password: z.string()
-        .min(8, {
-            message: "Password must be at least 8 characters"
-        })
-        .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
-        .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
-        .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
-        .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
-    ,
-    confirmPassword: z.string()
-        .min(8, {
-            message: "Password must be at least 8 characters"
-        })
-        .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
-        .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
-        .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
-        .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
-    ,
-    adharId: z.string()
-        .min(12, "Adhar ID must be 12 digits")
-        .max(12, "Adhar ID must be 12 digits")
-        .refine((val) => !isNaN(Number(val)), { message: "Must be a number" })
-        .transform((val) => Number(val))
-    ,
-    phoneNumber: z.string()
-        .min(10, "Phone number must be 10 digits")
-        .max(10, "Phone number must be 10 digits")
-        .refine((val) => !isNaN(Number(val)), { message: "Must be a number" })
-        .transform((val) => Number(val)),
+
 
 })
 
 //sign in schema
 export const SignInSchema = z.object({
-    username: z
-        .string(),
+    email: z
+        .string()
+        .email({ message: "Invalid email address" })
+        .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please Enter a valid email"),
+
 
     password: z.string()
         .min(8, {

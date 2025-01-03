@@ -46,6 +46,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         //check password is correct or not
         const checkPassword = await comparePassword({ password, hashedPassword: user.password });
 
+        console.log("Checked user password")
         //if password is incorrect then return error
         if (!checkPassword) {
             response = {

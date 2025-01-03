@@ -4,7 +4,7 @@ import mongoose, { Schema } from "mongoose";
 const likeSchema = new Schema<Like>({
     media: {
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: "Post"
     },
     likeUser: {
         type: Schema.Types.ObjectId,

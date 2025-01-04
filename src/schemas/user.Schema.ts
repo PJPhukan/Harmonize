@@ -59,3 +59,23 @@ export const verifySchema = z.object({
         .min(6, "Verification code must be 6 digits")
         .max(6, "Verification code must be 6 digits")
 })
+
+//setup user profile 
+export const setupSchema = z.object({
+    name: z.string().min(3, "Name must be at least 3 characters"),
+    location: z.string().optional(),
+    bio: z.string().min(10, "Bio must be at least 3 characters")
+        .max(500, "Bio must be at most 500 characters"),
+    // profilePic: z.string().optional(),
+    genres: z.array(z.string()).min(1, "At least one genre must be selected"),
+    skills: z.array(z.string()).min(1, "At least one skill must be selected"),
+    avatar: z.string(),
+    website: z.string().optional(),
+    youtube: z.string().optional(),
+    spotify: z.string().optional(),
+    instragram: z.string().optional(),
+    twitter: z.string().optional(),
+    linkdin: z.string().optional(),
+    discord: z.string().optional(),
+
+})

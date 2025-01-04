@@ -54,6 +54,7 @@ const Page = () => {
       if (response.data.success) {
         setSuccessMsg("Successfully user logged in");
         console.log("User successfully signed in ");
+        router.replace(`/${response.data.data._id}/setup-profile`);
       } else {
         setErrorMsg(response.data.message);
       }
@@ -62,7 +63,6 @@ const Page = () => {
         setErrorMsg("");
         setSuccessMsg("");
       }, 1000);
-      // router.replace(`/verify-user/${data.email}`);
     } catch (err) {
       console.log("Sign up error", err);
       toast({

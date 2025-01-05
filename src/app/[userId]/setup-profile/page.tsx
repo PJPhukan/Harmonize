@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Camera, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Profile from "@/assets/architecture.jpg";
@@ -93,37 +93,52 @@ const page = () => {
     "avatar",
     { defaultUploadedFiles: [] }
   );
+  useEffect(() => {
+    console.log(form.getValues());
+    // console.log("Skills ", skills);
+    // console.log("G ", genres);
+  }, [form.watch()]);
 
-  const onSubmit = async (data: z.infer<typeof setupSchema>) => {
-    setIsSubmittingForm(true);
-    console.log("Other data:", data);
-    SonnerToast.promise(
-      onUpload(data.avatar).then(async (dt) => {
-        console.log("DATA : ", data);
-        if (data && dt && dt[0]?.url) {
-          data.avatarURL = dt[0].url;
-        }
-        // const response = await axios.post(`/api/c-event`, data);
-        // toast({
-        //   title: "Success",
-        //   description: response.data.message,
-        // });
-        setIsSubmittingForm(false);
-        // router.replace(`/user/me`);
-      }),
-      {
-        loading: "Uploading images...",
-        success: () => {
-          form.reset();
-          setIsSubmittingForm(false);
-          return "Images uploaded";
-        },
-        error: (err: any) => {
-          setIsSubmittingForm(false);
-          return getErrorMessage(err);
-        },
-      }
-    );
+  useEffect(() => {
+    form.setValue("genres", genres);
+  }, [genres]);
+
+  useEffect(() => {
+    form.setValue("skills", skills);
+  }, [skills]);
+
+  const onSubmit = (data: z.infer<typeof setupSchema>) => {
+    console.log("Submit form", data);
+    // console.log(form.formState.errors);
+    // setIsSubmittingForm(true);
+    // console.log("Other data:", data);
+    // SonnerToast.promise(
+    //   onUpload(data.avatar).then(async (dt) => {
+    //     console.log("DATA : ", data);
+    //     if (data && dt && dt[0]?.url) {
+    //       data.avatarURL = dt[0].url;
+    //     }
+    //     // const response = await axios.post(`/api/c-event`, data);
+    //     // toast({
+    //     //   title: "Success",
+    //     //   description: response.data.message,
+    //     // });
+    //     setIsSubmittingForm(false);
+    //     // router.replace(`/user/me`);
+    //   }),
+    //   {
+    //     loading: "Uploading images...",
+    //     success: () => {
+    //       form.reset();
+    //       setIsSubmittingForm(false);
+    //       return "Images uploaded";
+    //     },
+    //     error: (err: any) => {
+    //       setIsSubmittingForm(false);
+    //       return getErrorMessage(err);
+    //     },
+    //   }
+    // );
   };
   return (
     <div className="bg-auth-bg bg-cover bg-start min-h-screen text-white  flex justify-center flex-col items-center bg-opacity-50">
@@ -139,6 +154,7 @@ const page = () => {
         )}
         <Form {...form}>
           <form
+            method="post"
             onSubmit={form.handleSubmit(onSubmit)}
             className=" w-full text-black flex flex-col gap-2"
           >
@@ -445,7 +461,7 @@ const page = () => {
             <div className="flex justify-end">
               <Button
                 type="submit"
-                disabled={isSubmittingForm}
+                // disabled={isSubmittingForm}
                 className="mt-4  text-white py-2 rounded-full font-medium  transition"
               >
                 {isSubmittingForm ? (
@@ -460,47 +476,7 @@ const page = () => {
             </div>
           </form>
         </Form>
-
-        {/* <div className="mt-6 flex items-center justify-between">
-              <span className="border-t flex-grow border-gray-300"></span>
-              <span className="text-sm text-gray-500 mx-3">
-                or continue with
-              </span>
-              <span className="border-t flex-grow border-gray-300"></span>
-            </div>
-            <div className="mt-4 flex justify-center space-x-4">
-              <button className="p-2 bg-gray-100 rounded-full">
-                <FaGoogle className="text-black" />
-                <span className="hidden">Google</span>
-              </button>
-              <button className="p-2 bg-gray-100 rounded-full">
-                <FaFacebook className="text-black" />
-                <span className="hidden">Facebook</span>
-              </button>
-              <button className="p-2 bg-gray-100 rounded-full">
-                <FaApple className="text-black" />
-                <span className="hidden">Apple</span>
-              </button>
-            </div>
-            <p className="mt-6 text-sm text-gray-500 text-center">
-              By continuing, you agree to Harmonize's{" "}
-              <Link href="/terms" className="text-indigo-500 hover:underline">
-                Terms of Use
-              </Link>
-              and
-              <Link href="/policy" className="text-indigo-500 hover:underline">
-                Privacy Policy
-              </Link>
-              .
-            </p>
-            <p className="mt-4 text-center text-sm text-black">
-              Don't have an account?
-              <Link href="/sign-up" className="text-indigo-500 hover:underline">
-                Sign Up
-              </Link>
-            </p> */}
       </div>
-      {/* </div> */}
     </div>
   );
 };

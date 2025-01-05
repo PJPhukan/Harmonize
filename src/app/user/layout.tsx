@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <div className="w-screen flex px-[5rem]">
-      <div className="w-2/6">
+      <div className="w-2/6  md:sticky top-0 left-0 h-screen ">
         <SidebarNavber />
       </div>
       <div className="w-full">{children}</div>

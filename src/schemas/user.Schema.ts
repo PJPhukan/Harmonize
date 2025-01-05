@@ -64,14 +64,14 @@ export const verifySchema = z.object({
 export const setupSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters"),
     location: z.string().optional(),
-    bio: z.string().min(10, "Bio must be at least 3 characters")
+    bio: z.string().min(10, "Bio must be at least 10 characters")
         .max(500, "Bio must be at most 500 characters"),
     // profilePic: z.string().optional(),
     genres: z.array(z.string()).min(1, "At least one genre must be selected"),
     skills: z.array(z.string()).min(1, "At least one skill must be selected"),
     avatar: z.array(z.instanceof(File))
         .refine((files) => files.length > 0, { message: "avatar must be selected" }),
-    avatarURL: z.string(),
+    avatarURL: z.string().optional(),
 
     website: z.string().optional(),
     youtube: z.string().optional(),

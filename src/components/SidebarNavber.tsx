@@ -16,7 +16,7 @@ const SidebarNavber = () => {
   return (
     <div
       id="sidebar"
-      className="w-full bg-white border-b lg:border-b-0 lg:border-r border-gray-200 py-4 px-6 hidden md:block h-screen sticky top-0 left-0"
+      className="w-full bg-white border-b lg:border-b-0 lg:border-r border-gray-200 py-4 px-6 overflow-x-hidden overflow-y-auto  scrollbar-hide"
     >
       <h1 className="text-xl font-bold text-purple-600 mb-6 text-center lg:text-left">
         Harmonize

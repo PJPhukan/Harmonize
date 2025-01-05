@@ -9,12 +9,15 @@ import { cn, formatBytes } from "@/lib/utils";
 import { useControllableState } from "@/hooks/use-controllable-state";
 import { Button } from "@/components/ui/button";
 import profile from "@/assets/userAvatar.jpg";
+import { useFormContext } from "react-hook-form";
+import { z } from "zod";
+import { setupSchema } from "@/schemas/user.Schema";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: File[];
   onValueChange?: (files: File[]) => void;
   onUpload?: (files: File[]) => Promise<void>;
-    progresses?: Record<string, number>;
+  progresses?: Record<string, number>;
   accept?: string;
   maxSize?: number;
   maxFileCount?: number;
@@ -23,6 +26,7 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function AvatarUploader(props: FileUploaderProps) {
+  const { control, watch } = useFormContext<z.infer<typeof setupSchema>>();
   const {
     value: valueProp,
     onValueChange,
@@ -114,13 +118,20 @@ export function AvatarUploader(props: FileUploaderProps) {
     <div className="relative flex flex-col gap-6 overflow-hidden">
       <div className="h-32 w-32 mr-4 relative bg-gray-100 rounded-full">
         <Image
-          src={profile}
+          src={
+            files && files.length > 0 ? URL.createObjectURL(files[0]) : profile
+          }
+          width={128}
+          height={128}
           alt=""
           className="h-full w-full z-10 rounded-full"
         ></Image>
-        <label htmlFor="avatar">
+        <label
+          htmlFor="avatar"
+          className="z-20 text-xl rounded-full absolute  bottom-1.5 right-1 h-[35px] w-[35px]"
+        >
           <Camera
-            className="z-20 text-xl text-white p-1 rounded-full bg-gray-500 absolute bottom-1.5 right-1"
+            className="z-20 text-xl text-white p-1 rounded-full bg-gray-500 "
             height={30}
             width={30}
           />
@@ -128,7 +139,6 @@ export function AvatarUploader(props: FileUploaderProps) {
         </label>
 
         <input
-          id="avatar"
           type="file"
           accept={accept}
           multiple={multiple}
@@ -136,8 +146,10 @@ export function AvatarUploader(props: FileUploaderProps) {
           className="hidden"
           onChange={handleFileChange}
           {...rest}
+          id="avatar"
         />
       </div>
+          
     </div>
   );
 }
@@ -147,39 +159,6 @@ interface FileCardProps {
   onRemove: () => void;
   //   progress?: number;
 }
-
-// function FileCard({ file, progress, onRemove }: FileCardProps) {
-//   return (
-//     <div className="relative flex items-center gap-2.5">
-//       <div className="flex flex-1 gap-2.5">
-//         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
-//         <div className="flex w-full flex-col gap-2">
-//           <div className="flex flex-col gap-px">
-//             <p className="line-clamp-1 text-sm font-medium text-foreground/80">
-//               {file.name}
-//             </p>
-//             <p className="text-xs text-muted-foreground">
-//               {formatBytes(file.size)}
-//             </p>
-//           </div>
-//           {progress ? <Progress value={progress} /> : null}
-//         </div>
-//       </div>
-//       <div className="flex items-center gap-2">
-//         <Button
-//           type="button"
-//           variant="outline"
-//           size="icon"
-//           className="size-7"
-//           onClick={onRemove}
-//         >
-//           <X className="size-4" aria-hidden="true" />
-//           <span className="sr-only">Remove file</span>
-//         </Button>
-//       </div>
-//     </div>
-//   );
-// }
 
 function isFileWithPreview(file: File): file is File & { preview: string } {
   return "preview" in file && typeof file.preview === "string";

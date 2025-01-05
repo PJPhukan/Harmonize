@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-screen flex">
-      <div className="w-1/6">
+    <div className="w-screen flex px-[5rem]">
+      <div className="w-2/6">
         <SidebarNavber />
       </div>
       <div className="w-full">{children}</div>

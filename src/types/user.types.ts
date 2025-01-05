@@ -9,16 +9,17 @@ export interface User extends Document {
     genres: [string];
     avatar: string;
     bio: string;
-    location: {
-        city: string,
-        state: string,
-        country: string
-    }
+    location: string;
     dob: Date;
     verifyCode: string;
     verifyCodeExp: Date;
     isVerified: boolean;
+
     createdAt: Date;
     updatedAt: Date;
+    website: string;
+    youtube: string;
+    spotify: string;
+    otherLink: [string]
 
 }

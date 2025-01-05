@@ -11,7 +11,7 @@ const postSchema = new Schema<Post>(
         },
         description: {
             type: String,
-            required: [true, "Description is required"]
+            // required: [true, "Description is required"]
         },
         tag: {
             type: String,

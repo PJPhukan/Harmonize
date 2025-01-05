@@ -15,8 +15,8 @@ const userSchema = new Schema<User>({
         ]
     },
     skill: [{
-            type: String,
-        }
+        type: String,
+    }
     ],
     genres: [
         {
@@ -24,7 +24,7 @@ const userSchema = new Schema<User>({
             //TODO: add required properties
         }
     ],
- 
+
     password: {
         type: String,
         required: [true, "Password is required"]
@@ -33,15 +33,8 @@ const userSchema = new Schema<User>({
         type: String,
     },
     location: {
-        city: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
-        country: {
-            type: String,
-        }
+        type: String,
+
     },
     verifyCode: {
         type: String,
@@ -62,14 +55,28 @@ const userSchema = new Schema<User>({
     avatar: {
         type: String,
         default: "/images/avatar.png" //TODO:Add default avater image 
-    }
+    },
+    website: {
+        type: String,
+    },
+    youtube: {
+        type: String,
+    },
+    spotify: {
+        type: String,
+    },
+    otherLink: [
+        {
+            type: String,
+        }
+    ]
 
     //TODO: Foreign key
 
 },
-{
-    timestamps: true
-})
+    {
+        timestamps: true
+    })
 
 const UserModel = (mongoose.models.User as mongoose.Model<User>) || (mongoose.model<User>("User", userSchema))
 

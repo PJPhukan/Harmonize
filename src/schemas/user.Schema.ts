@@ -69,7 +69,10 @@ export const setupSchema = z.object({
     // profilePic: z.string().optional(),
     genres: z.array(z.string()).min(1, "At least one genre must be selected"),
     skills: z.array(z.string()).min(1, "At least one skill must be selected"),
-    avatar: z.string(),
+    avatar: z.array(z.instanceof(File))
+        .refine((files) => files.length > 0, { message: "avatar must be selected" }),
+    avatarURL: z.string(),
+
     website: z.string().optional(),
     youtube: z.string().optional(),
     spotify: z.string().optional(),

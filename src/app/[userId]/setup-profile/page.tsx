@@ -21,8 +21,12 @@ import { z } from "zod";
 import Profile from "@/assets/architecture.jpg";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
+import { AvatarUploader } from "@/components/media/file-avatar-uploader";
+import { useUploadFile } from "@/hooks/use-upload-file";
+import { toast as SonnerToast } from "sonner";
+import { getErrorMessage } from "@/lib/handle-error";
 const page = () => {
-  const [isSubmittingForm, setisSubmittingForm] = useState(false);
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
@@ -32,7 +36,8 @@ const page = () => {
       name: "",
       location: "",
       bio: "",
-      avatar: "",
+      avatar: [],
+      avatarURL: "",
       website: "",
       youtube: "",
       spotify: "",
@@ -84,36 +89,41 @@ const page = () => {
     setGenres(newGenres);
   };
 
+  const { progresses, uploadedFiles, isUploading, onUpload } = useUploadFile(
+    "avatar",
+    { defaultUploadedFiles: [] }
+  );
+
   const onSubmit = async (data: z.infer<typeof setupSchema>) => {
-    console.log("Data submitted :", data);
-    setisSubmittingForm(true);
-    try {
-      const response = await axios.post(`/api/sign-in`, data);
-
-      console.log("Response", response);
-
-      if (response.data.success) {
-        setSuccessMsg("Successfully user logged in");
-        console.log("User successfully signed in ");
-        router.replace(`/${response.data.data._id}/setup-profile`);
-      } else {
-        setErrorMsg(response.data.message);
+    setIsSubmittingForm(true);
+    console.log("Other data:", data);
+    SonnerToast.promise(
+      onUpload(data.avatar).then(async (dt) => {
+        console.log("DATA : ", data);
+        if (data && dt && dt[0]?.url) {
+          data.avatarURL = dt[0].url;
+        }
+        // const response = await axios.post(`/api/c-event`, data);
+        // toast({
+        //   title: "Success",
+        //   description: response.data.message,
+        // });
+        setIsSubmittingForm(false);
+        // router.replace(`/user/me`);
+      }),
+      {
+        loading: "Uploading images...",
+        success: () => {
+          form.reset();
+          setIsSubmittingForm(false);
+          return "Images uploaded";
+        },
+        error: (err: any) => {
+          setIsSubmittingForm(false);
+          return getErrorMessage(err);
+        },
       }
-
-      setTimeout(() => {
-        setErrorMsg("");
-        setSuccessMsg("");
-      }, 1000);
-    } catch (err) {
-      console.log("Sign up error", err);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to sign in",
-      });
-    } finally {
-      setisSubmittingForm(false);
-    }
+    );
   };
   return (
     <div className="bg-auth-bg bg-cover bg-start min-h-screen text-white  flex justify-center flex-col items-center bg-opacity-50">
@@ -133,22 +143,36 @@ const page = () => {
             className=" w-full text-black flex flex-col gap-2"
           >
             <div className="flex items-center mb-4">
-              <div className="h-32 w-32 mr-4 relative ">
-                <Image
-                  src={Profile}
-                  alt=""
-                  className="h-full w-full z-10 rounded-full"
-                ></Image>
-                <label htmlFor="avatar">
-                  <Camera
-                    className="z-20 text-xl text-white p-1 rounded-full bg-gray-500 absolute bottom-1.5 right-1"
-                    height={30}
-                    width={30}
-                  />
-                  <span className="hidden">Avatar</span>
-                </label>
-                <input type="file" id="avatar" className="hidden" />
-              </div>
+              <FormField
+                control={form.control}
+                name="avatar"
+                render={({ field }) => (
+                  <div className="space-y-6">
+                    <FormItem className="w-full">
+                      <FormLabel className="text-base md:text-xl font-medium hidden">
+                        Avatar
+                      </FormLabel>
+                      <FormControl>
+                        <AvatarUploader
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          maxFileCount={1}
+                          maxSize={4 * 1024 * 1024}
+                          progresses={progresses}
+                          // pass the onUpload function here for direct upload
+                          //   onUpload={onUpload}
+                          disabled={isUploading || isSubmittingForm}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                    {/* {uploadedFiles.length > 0 ? (
+                  <UploadedFilesCard uploadedFiles={uploadedFiles} />
+                ) : null} */}
+                  </div>
+                )}
+              />
+              {/* <AvatarUploader /> */}
               <div className="flex-1">
                 <FormField
                   control={form.control}

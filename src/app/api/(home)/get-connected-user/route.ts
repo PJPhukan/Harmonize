@@ -70,20 +70,38 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     totalLikes: { $size: "$likes" }
                 }
             },
-            { $sort: { createdAt: -1 } }, // Newest first
+            {
+                $lookup: {
+                    from: "users", // Collection for users
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDetails",
+                },
+            },
+            {
+                $unwind: "$ownerDetails", // Flatten the ownerDetails array
+            },
+            {
+                $sort: {
+                    createdAt: -1, // Newest first
+                },
+            },
             {
                 $project: {
                     _id: 1,
-                    type: 1,
                     url: 1,
                     description: 1,
-                    tag: 1,
                     owner: 1,
+                    tag: 1,
                     totalLikes: 1,
-                    createdAt: 1
+                    type: 1,
+                    name: 1,
+                    ownerDetails: 1
                 }
             }
         ]);
+
+        console.log("Get all connected user post Post :", posts)
 
         return NextResponse.json({
             success: true,

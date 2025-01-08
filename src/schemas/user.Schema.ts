@@ -82,3 +82,4 @@ export const setupSchema = z.object({
     discord: z.string().optional(),
 
 })
+

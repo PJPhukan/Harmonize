@@ -1,6 +1,7 @@
 import { decodeToken } from "@/helpers/authHelpers";
 import { ConnectionModel } from "@/model/connections.model";
 import { NotificationModel } from "@/model/notification.model";
+import { UserModel } from "@/model/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
@@ -25,6 +26,19 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
             requestee: requesteeId,
         });
 
+        const notificationMessage = await NotificationModel.findOne({
+            owner: requesteeId,
+            requester: tokenId,
+        });
+
+        const user = await UserModel.findById(tokenId)
+        if (!user) {
+            return NextResponse.json({
+                success: false,
+                message: "User not found",
+                statusCode: 404,
+            });
+        }
         if (!connection) {
             return NextResponse.json({
                 success: false,
@@ -35,16 +49,8 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
         // Delete the connection request
         await connection.deleteOne();
-
-        // Create a notification for the requester
-        const notification = new NotificationModel({
-            owner: requesteeId,
-            message: `${tokenId.name} canceled the connection request.`,
-            requester: tokenId,
-            requesterURL: `/profile/${tokenId._id}`,
-        });
-
-        await notification.save();
+        await notificationMessage?.deleteOne();
+        
 
         return NextResponse.json({
             success: true,

@@ -26,7 +26,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
             });
         }
         const { requesterId } = await request.json(); // Get the user ID of the requester
-
+        console.log("Requester ID :", requesterId)
         // Find the connection request from the requester
         const connection = await ConnectionModel.findOne({
             requester: requesterId,
@@ -56,9 +56,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         // Create a notification for the requester
         const notification = new NotificationModel({
             owner: requesterId,
-            message: `${user.username} accepted your connection request.`,
+            message: `${user.name} accepted your connection request.`,
             requester: tokenId,
-            requesterURL: `/profile/${tokenId._id}`,
+            requesterURL: `${user.avatar}`,
         });
 
         await notification.save();

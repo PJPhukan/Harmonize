@@ -72,7 +72,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             },
             {
                 $lookup: {
-                    from: "likes",
+                    from: "likes", // Collection for likes
                     localField: "_id",
                     foreignField: "media",
                     as: "likes",
@@ -82,6 +82,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 $addFields: {
                     totalLikes: { $size: "$likes" },
                 },
+            },
+            {
+                $lookup: {
+                    from: "users", // Collection for users
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDetails",
+                },
+            },
+            {
+                $unwind: "$ownerDetails", // Flatten the ownerDetails array
             },
             {
                 $sort: {
@@ -96,10 +107,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     owner: 1,
                     tag: 1,
                     totalLikes: 1,
-                    createdAt: 1,
+                    type: 1,
+                    name: 1,
+                    ownerDetails: 1, // Include complete owner details
                 },
             },
         ]);
+
+        console.log("Connected user post :", posts)
 
         return NextResponse.json({
             success: true,

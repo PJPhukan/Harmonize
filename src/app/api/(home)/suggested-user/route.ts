@@ -61,7 +61,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     genres: { $in: userGenres }, // Match genres
                 },
             },
-            { $sample: { size: 10 } }, // Randomize results, return up to 10 users
+            { 
+                $sample: { size: 10 } }, // Randomize results, return up to 10 users
             {
                 $project: {
                     name: 1,

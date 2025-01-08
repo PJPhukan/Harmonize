@@ -16,8 +16,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             });
         }
 
-        // Count the total number of posts (tracks) for the logged-in user
-        const totalTracks = await PostModel.countDocuments({ owner: tokenId });
+        // Count the total number of posts (tracks) for the logged-in user where type includes 'audio'
+        const totalTracks = await PostModel.countDocuments({
+            owner: tokenId,
+            type: { $regex: 'audio', $options: 'i' }, // 'i' for case-insensitive match
+        });
 
         return NextResponse.json({
             success: true,

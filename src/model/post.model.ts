@@ -16,6 +16,12 @@ const postSchema = new Schema<Post>(
         tag: {
             type: String,
         },
+        name: {
+            type: String
+        },
+        ownerName: {
+            type: String
+        },
 
         //Foreign key
         owner: {

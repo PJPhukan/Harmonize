@@ -20,6 +20,6 @@ export interface User extends Document {
     website: string;
     youtube: string;
     spotify: string;
-    otherLink: [string]
+    otherLink: string[]
 
 }

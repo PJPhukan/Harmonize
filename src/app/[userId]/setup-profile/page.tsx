@@ -14,7 +14,7 @@ import { setupSchema, SignInSchema } from "@/schemas/user.Schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Camera, Loader2, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -94,7 +94,7 @@ const page = () => {
     { defaultUploadedFiles: [] }
   );
   useEffect(() => {
-    console.log(form.getValues());
+    // console.log(form.getValues());
     // console.log("Skills ", skills);
     // console.log("G ", genres);
   }, [form.watch()]);
@@ -107,38 +107,49 @@ const page = () => {
     form.setValue("skills", skills);
   }, [skills]);
 
+  const params = useParams<{ userId: string }>();
+  useEffect(() => {
+    if (!params?.userId) {
+      notFound(); // Redirect to 404 page
+    }
+  }, [params]);
   const onSubmit = (data: z.infer<typeof setupSchema>) => {
     console.log("Submit form", data);
     // console.log(form.formState.errors);
-    // setIsSubmittingForm(true);
-    // console.log("Other data:", data);
-    // SonnerToast.promise(
-    //   onUpload(data.avatar).then(async (dt) => {
-    //     console.log("DATA : ", data);
-    //     if (data && dt && dt[0]?.url) {
-    //       data.avatarURL = dt[0].url;
-    //     }
-    //     // const response = await axios.post(`/api/c-event`, data);
-    //     // toast({
-    //     //   title: "Success",
-    //     //   description: response.data.message,
-    //     // });
-    //     setIsSubmittingForm(false);
-    //     // router.replace(`/user/me`);
-    //   }),
-    //   {
-    //     loading: "Uploading images...",
-    //     success: () => {
-    //       form.reset();
-    //       setIsSubmittingForm(false);
-    //       return "Images uploaded";
-    //     },
-    //     error: (err: any) => {
-    //       setIsSubmittingForm(false);
-    //       return getErrorMessage(err);
-    //     },
-    //   }
-    // );
+    setIsSubmittingForm(true);
+    console.log("Other data:", data);
+    SonnerToast.promise(
+      onUpload(data.avatar).then(async (dt) => {
+        console.log("DATA : ", data);
+        if (data && dt && dt[0]?.url) {
+          data.avatarURL = dt[0].url;
+        }
+        const response = await axios.post(
+          `/api/setup-profile/${params.userId}`,
+          data
+        );
+        if (response.data.status) {
+          toast({
+            title: "Success",
+            description: response.data.message,
+          });
+          router.replace(`/user`);
+        }
+        setIsSubmittingForm(false);
+      }),
+      {
+        loading: "Uploading images...",
+        success: () => {
+          form.reset();
+          setIsSubmittingForm(false);
+          return "Images uploaded";
+        },
+        error: (err: any) => {
+          setIsSubmittingForm(false);
+          return getErrorMessage(err);
+        },
+      }
+    );
   };
   return (
     <div className="bg-auth-bg bg-cover bg-start min-h-screen text-white  flex justify-center flex-col items-center bg-opacity-50">

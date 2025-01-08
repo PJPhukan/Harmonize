@@ -38,6 +38,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 const Page = () => {
   const [isSubmittingForm, setisSubmittingForm] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const router = useRouter();
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
@@ -45,22 +46,13 @@ const Page = () => {
       name: "",
       email: "",
       password: "",
-      day:'',
-      month:'',
-      year:''
+      day: "",
+      month: "",
+      year: "",
     },
   });
 
-  const [date, setdate] = useState({
-    day: "DD",
-    month: "MM",
-    year: "YYYY",
-  });
 
-  const onchange = (e: any) => {
-    const { name, value } = e.target;
-    setdate({ ...date, [name]: value });
-  };
 
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const months = [
@@ -80,25 +72,26 @@ const Page = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
-  const combineDate = (y: string, m: string, d: string): Date => {
-    const year = parseInt(y);
-    const month = parseInt(m);
-    const day = parseInt(d);
-    return new Date(year, month - 1, day);
-  };
-
   const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
     console.log("Data submitted :", data);
     setisSubmittingForm(true);
     try {
-      
       const response = await axios.post(`/api/sign-up`, data);
       console.log("Response", response);
       toast({
         title: "Success",
         description: response.data.message,
       });
-      router.replace(`/verify-user/${data.email}`);
+      if (response.data.success) {
+        router.replace(`/verify-user/${data.email}`);
+      } else {
+        setErrMsg(response.data.message);
+        setTimeout(() => {
+          setErrMsg("");
+        }, 1000);
+      }
+
+   
     } catch (err) {
       console.log("Sign up error", err);
       toast({
@@ -115,8 +108,8 @@ const Page = () => {
       <Navber />
 
       <div className="bg-auth-bg bg-cover bg-start min-h-screen text-white  flex justify-center flex-col items-center bg-opacity-50">
-      <div className="flex items-center justify-center  px-1 sm:px-2 md:px-4">
-      <div className="bg-white rounded-lg shadow-xl m-2 md:m-12 p-6 sm:p-8 w-full max-w-md">
+        <div className="flex items-center justify-center  px-1 sm:px-2 md:px-4">
+          <div className="bg-white rounded-lg shadow-xl m-2 md:m-12 p-6 sm:p-8 w-full max-w-md">
             <div className="text-center">
               <h1 className="text-2xl font-bold  text-black">
                 Create an Account
@@ -125,6 +118,7 @@ const Page = () => {
                 Be a part of the music community
               </p>
             </div>
+            {errMsg && <p className="text-red-400">{errMsg}</p>}
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}

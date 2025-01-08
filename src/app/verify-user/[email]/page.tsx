@@ -28,6 +28,7 @@ import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 import Navber from "@/components/Navber";
 const page = () => {
   const [isSubmittingForm, setisSubmittingForm] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const { toast } = useToast();
   const router = useRouter();
   const params = useParams<{ email: string }>();
@@ -46,7 +47,15 @@ const page = () => {
         title: "Success",
         description: response.data.message,
       });
-      router.replace("/login");
+      if (response.data.success) {
+        // router.replace("/login");
+        router.replace(`/${response.data.data._id}/setup-profile`);
+      } else {
+        setErrMsg(response.data.message);
+        setTimeout(() => {
+          setErrMsg("");
+        }, 1000);
+      }
     } catch (err) {
       //write catch block
       console.log("Print sign up error", err);
@@ -67,12 +76,13 @@ const page = () => {
           <div className="bg-white rounded-lg shadow-xl m-2 md:m-12 p-6 sm:p-8 w-full max-w-md">
             <div className="text-center">
               <h1 className="text-2xl font-bold  text-black">
-                Create an Account
+              Verify your account
               </h1>
-              <p className="text-md font-bold mb-4 sm:mb-6 text-gray-400 font-custom">
+              {/* <p className="text-md font-bold mb-4 sm:mb-6 text-gray-400 font-custom">
                 Be a part of the music community
-              </p>
+              </p> */}
             </div>
+            {errMsg && <p className="text-red-400">{errMsg}</p>}
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}

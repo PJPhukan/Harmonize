@@ -62,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             owner: requesteeId,
             message: `${user.name} sent you a connection request.`,
             requester: tokenId,
-            requesterURL: `/profile/${user._id}`,
+            requesterURL: `${user.avatar}`,
         });
 
         await notification.save();
@@ -71,6 +71,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             success: true,
             message: "Connection request sent successfully.",
             statusCode: 201,
+            data: newConnection
         });
     } catch (error) {
         console.error("Error sending connection request: ", error);

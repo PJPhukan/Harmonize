@@ -13,11 +13,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-screen flex px-[5rem]">
-      <div className="w-2/6  md:sticky top-0 left-0 h-screen ">
-        <SidebarNavber />
+      <div className="w-screen flex px-20 overflow-x-hidden">
+        {/* Sidebar Section */}
+        <div className="w-1.5/6 h-screen sticky top-0">
+          <SidebarNavber />
+        </div>
+  
+        {/* Main Content Section */}
+        <div className="w-4.5/6">{children}</div>
       </div>
-      <div className="w-full">{children}</div>
-    </div>
-  );
+    );
+
 }

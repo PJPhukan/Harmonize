@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400..800&family=Dancing+Script:wght@400..700&family=Quicksand:wght@300..700&family=Sevillana&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400..800&family=Dancing+Script:wght@400..700&family=Quicksand:wght@300..700&family=Sevillana&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +6,30 @@
 body {
   font-family: "Quicksand", serif !important;
 }
+* {
+  box-sizing: border-box;
+}
 
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+.sliding-panel {
+  width: 20%; /* Set width as a percentage */
+}
+
+@media (min-width: 768px) {
+  .sliding-panel {
+    width: 18%; /* Adjust for larger screens */
+  }
+}
+.img {
+  width: 40px;
+  height: 40px;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -70,4 +93,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-

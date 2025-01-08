@@ -100,8 +100,10 @@ export function FileUploader(props: FileUploaderProps) {
     progresses,
     accept = {
       "image/*": [],
+      "audio/*": [],
+      "video/*": [],
     },
-    maxSize = 1024 * 1024 * 2,
+    maxSize = 1024 * 1024 * 10,
     maxFileCount = 1,
     multiple = false,
     disabled = false,
@@ -274,13 +276,15 @@ interface FileCardProps {
 
 function FileCard({ file, progress, onRemove }: FileCardProps) {
   return (
-    <div className="relative flex items-center gap-2.5">
+    <div className="relative flex items-center gap-2.5 sm:max-w-[425px]">
       <div className="flex flex-1 gap-2.5">
         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-col gap-px">
-            <p className="line-clamp-1 text-sm font-medium text-foreground/80">
-              {file.name}
+            <p className="line-clamp-1 text-sm font-medium text-foreground/80 overflow-hidden">
+              {file.name.length > 15
+                ? `${file.name.slice(0, 25)}...`
+                : file.name}
             </p>
             <p className="text-xs text-muted-foreground">
               {formatBytes(file.size)}

@@ -2,11 +2,11 @@ import { Connection } from "@/types/connections";
 import mongoose, { Schema } from "mongoose";
 const userSchema = new Schema<Connection>(
     {
-        requester: {
+        requester: { //from 
             type: Schema.Types.ObjectId,
             ref: "User"
         },
-        requestee: {
+        requestee: { //to user for connection
             type: Schema.Types.ObjectId,
             ref: "User"
         },

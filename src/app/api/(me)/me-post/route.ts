@@ -9,10 +9,10 @@ import { NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
 
-        const { type, url, description, tag } = await request.json();
+        const { type, postURL, post, description, tag, name } = await request.json();
 
 
-
+        console.log("Post :", post)
 
         // TODO: No need to change upto next todo 
         //decode payload from the request
@@ -49,11 +49,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
         // TODO: upto here 
 
-
+        console.log(user.name)
         let newPost = await PostModel.create({
-            type,
-            url, description,
-            tag,
+            type: type || "",
+            url: postURL, description,
+            tag: tag || "",
+            name,
+            ownerName: user.name,
             owner: user._id
         })
 
@@ -65,7 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             })
         }
 
-
+        console.log("New post ,", newPost)
         return NextResponse.json({
             success: true,
             message: "Post created successfully",
@@ -169,7 +171,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             return NextResponse.json({
                 success: false,
                 message: "Invalid or expired token.",
-                statusCode: 401
+                statusCode: 401,
             });
         }
 
@@ -179,7 +181,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             return NextResponse.json({
                 success: false,
                 message: "User not found.",
-                statusCode: 404
+                statusCode: 404,
             });
         }
 
@@ -187,29 +189,34 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             return NextResponse.json({
                 success: false,
                 message: "User is not verified.",
-                statusCode: 401
+                statusCode: 401,
             });
         }
 
         // Helper function for aggregating posts by type
-        const fetchPostsByType = async (type?: string) => {
+        const fetchPostsByType = async (typeKeyword?: string) => {
             const matchCondition: Record<string, any> = { owner: user._id };
-            if (type) matchCondition.type = type;
+            if (typeKeyword) {
+                // Use $regex to match the keyword within the `type` field
+                matchCondition.type = { $regex: typeKeyword, $options: "i" }; // Case-insensitive match
+            }
 
+            // console.log(`Fetching posts with type including: ${typeKeyword || "all"}`);
+            // console.log("Match Condition:", matchCondition);
             return PostModel.aggregate([
                 { $match: matchCondition },
                 {
                     $lookup: {
-                        from: "likes",
+                        from: "likes", // Assuming "likes" is a collection in your database
                         localField: "_id",
                         foreignField: "media",
-                        as: "likes"
-                    }
+                        as: "likes",
+                    },
                 },
                 {
                     $addFields: {
-                        totalLikes: { $size: "$likes" }
-                    }
+                        totalLikes: { $size: "$likes" },
+                    },
                 },
                 { $sort: { createdAt: -1 } },
                 {
@@ -219,42 +226,51 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                         description: 1,
                         owner: 1,
                         tag: 1,
-                        totalLikes: 1
-                    }
-                }
+                        totalLikes: 1,
+                        type: 1,
+                        name: 1
+                    },
+                },
             ]);
         };
 
         // Fetch posts by type
         const [allActivities, audioTracks, videoTracks, imageTracks] = await Promise.all([
-            fetchPostsByType(),
-            fetchPostsByType("audio"),
-            fetchPostsByType("video"),
-            fetchPostsByType("image")
+            fetchPostsByType(), // No type filter for allActivities
+            fetchPostsByType("audio"), // Fetch audio tracks
+            fetchPostsByType("video"), // Fetch video tracks
+            fetchPostsByType("image"), // Fetch image tracks
         ]);
 
+        // Verify the output of each query
+        console.log("All Activities:", allActivities);
+        console.log("Audio Tracks:", audioTracks);
+        console.log("Video Tracks:", videoTracks);
+        console.log("Image Tracks:", imageTracks);
+
         const returnData = {
-            audioTrack: audioTracks || null,
-            videoTrack: videoTracks || null,
-            imageTrack: imageTracks || null,
-            allActivities: allActivities || null
+            audioTrack: audioTracks?.length ? audioTracks : null,
+            videoTrack: videoTracks?.length ? videoTracks : null,
+            imageTrack: imageTracks?.length ? imageTracks : null,
+            allActivities: allActivities?.length ? allActivities : null,
         };
 
         return NextResponse.json({
             success: true,
             message: "Fetched posts successfully.",
             statusCode: 200,
-            data: returnData
+            data: returnData,
         });
     } catch (error) {
         console.error("Error while fetching posts: ", error);
         return NextResponse.json({
             success: false,
             message: "Failed to fetch posts.",
-            statusCode: 500
+            statusCode: 500,
         });
     }
 }
+
 
 
 // TODO:upload a post 

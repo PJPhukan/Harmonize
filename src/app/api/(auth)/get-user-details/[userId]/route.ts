@@ -7,9 +7,10 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs"
 import { comparePassword, decodeToken, encodeToken } from "@/helpers/authHelpers";
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: { params: { userId: string } }): Promise<NextResponse> {
     await dbConnect();
     try {
+        const { userId } = await params;
         //decode payload from the request
         const tokenId = decodeToken(request);
 
@@ -46,13 +47,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
         let response: ApiResponse;
 
+        const userDetails = await UserModel.findById(userId)?.select("-password")
+
+        //check user is authenticated or not
+        if (!userDetails) {
+            return NextResponse.json({
+                success: false,
+                message: "User not found.",
+                statusCode: 404
+            });
+        }
 
         //if user verified or credentials are valid then return user 
         response = {
             success: true,
             message: "Succesfully fetched user information",
             statusCode: 200,
-            data: user
+            data: userDetails
 
         }
 

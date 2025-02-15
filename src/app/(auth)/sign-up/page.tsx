@@ -73,11 +73,11 @@ const Page = () => {
   const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
   const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
-    console.log("Data submitted :", data);
+    // console.log("Data submitted :", data);
     setisSubmittingForm(true);
     try {
       const response = await axios.post(`/api/sign-up`, data);
-      console.log("Response", response);
+      // console.log("Response", response);
       toast({
         title: "Success",
         description: response.data.message,
@@ -88,12 +88,12 @@ const Page = () => {
         setErrMsg(response.data.message);
         setTimeout(() => {
           setErrMsg("");
-        }, 1000);
+        }, 3000);
       }
 
    
     } catch (err) {
-      console.log("Sign up error", err);
+      // console.log("Sign up error", err);
       toast({
         variant: "destructive",
         title: "Error",

@@ -58,14 +58,14 @@ const page = () => {
   const getSuggestedUserPost = async () => {
     try {
       const response = await axios.get("/api/get-connected-user");
-      console.log("Connected user Response", response);
+      // console.log("Connected user Response", response);
       if (response.data.success) {
         setPost(response.data.data);
       } else {
         console.log(response.data.message);
       }
     } catch (error) {
-      console.log("Error occured while fetching user follow content", error);
+      // console.log("Error occured while fetching user follow content", error);
       setErrorMsg("Internal server error");
     }
   };
@@ -81,7 +81,7 @@ const page = () => {
         console.log(response.data.message);
       }
     } catch (error) {
-      console.log("Error occured while fetching user details", error);
+      // console.log("Error occured while fetching user details", error);
       setErrorMsg("Internal server error");
     }
   };
@@ -109,7 +109,7 @@ const page = () => {
     // console.log("Other data:", data.post);
     SonnerToast.promise(
       onUpload(data.post).then(async (dt) => {
-        console.log("DATA : ", data);
+        // console.log("DATA : ", data);
         if (data && dt && dt[0]?.url) {
           data.postURL = dt[0].url;
           data.type = dt[0].type;
@@ -278,7 +278,7 @@ const page = () => {
         <div className="mt-6">
           {Post &&
             Post.map((pt: any, index: number) => {
-              console.log("Post :", pt);
+              // console.log("Post :", pt);
               if (pt.type.includes("image")) {
                 return (
                   <ShowPost

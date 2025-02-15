@@ -1,4 +1,5 @@
 import SidebarNavber from "@/components/SidebarNavber";
+import Topbar from "@/components/Topbar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
@@ -13,14 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <div className="w-screen flex px-20 overflow-x-hidden">
+      <div className="w-screen  overflow-x-hidden">
+        {/* Topbar  */}
+        <Topbar/>
         {/* Sidebar Section */}
-        <div className="w-1.5/6 h-screen sticky top-0">
+        {/* <div className="w-1.5/6 h-screen sticky top-0">
           <SidebarNavber />
-        </div>
+        </div> */}
   
         {/* Main Content Section */}
-        <div className="w-4.5/6">{children}</div>
+        {/* <div className="w-4.5/6 hidden md:block">{children}</div> */}
       </div>
     );
 

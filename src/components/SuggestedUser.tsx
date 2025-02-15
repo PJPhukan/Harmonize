@@ -9,8 +9,7 @@ const SuggestedUser = () => {
     avatar: string;
     genres: string[];
     bio: string;
-    _id:any
-    
+    _id: any;
   };
   const [suggestedUserDetails, setSuggestedUserDetails] = useState<
     SuggestedUser[]
@@ -21,7 +20,6 @@ const SuggestedUser = () => {
   }, []);
 
   const getSuggestedUser = async () => {
-
     try {
       const response = await axios.get("/api/suggested-user");
       console.log("Suggested user Response", response);
@@ -36,7 +34,8 @@ const SuggestedUser = () => {
     }
   };
   return (
-    <div className="h-screen sticky top-0 right-0 flex flex-col justify-between ">
+    // TODO: Check on responsive time
+    <div className="h-screen sticky top-0 right-0  flex-col justify-between hidden  md:flex">
       {/* Suggested Artists Section */}
       <div>
         <div className="flex items-center justify-between mb-4">

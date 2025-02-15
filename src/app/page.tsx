@@ -20,7 +20,7 @@ export default function Home() {
           Exercitationem, maiores nemo, nulla quae architecto enim voluptates
           corrupti laudantium reprehenderit quidem adipisci!
         </h3>
-        <Link href="/sign-in">
+        <Link href="/sign-up">
           {/* <Button> Get Started</Button> */}
           <button
             type="button"

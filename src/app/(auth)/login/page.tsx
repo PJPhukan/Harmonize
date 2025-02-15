@@ -44,16 +44,16 @@ const Page = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof SignInSchema>) => {
-    console.log("Data submitted :", data);
+    // console.log("Data submitted :", data);
     setisSubmittingForm(true);
     try {
       const response = await axios.post(`/api/sign-in`, data);
 
-      console.log("Response", response);
+      // console.log("Response", response);
 
       if (response.data.success) {
         setSuccessMsg("Successfully user logged in");
-        console.log("User successfully signed in ");
+        // console.log("User successfully signed in ");
         router.replace('/user');
       } else {
         setErrorMsg(response.data.message);
@@ -62,9 +62,9 @@ const Page = () => {
       setTimeout(() => {
         setErrorMsg("");
         setSuccessMsg("");
-      }, 1000);
+      }, 3000);
     } catch (err) {
-      console.log("Sign up error", err);
+      // console.log("Sign up error", err);
       toast({
         variant: "destructive",
         title: "Error",

@@ -18,7 +18,7 @@ const ShowPost = ({
   avatar: string;
   isConnected?: boolean;
 }) => {
-  console.log(post);
+  // console.log(post);
   const customLoader = ({ src }: { src: string }) => src;
   return (
     <div className="w-full  rounded-md mt-3 overflow-hidden min-h-[5rem] p-1 border-b">

@@ -6,6 +6,7 @@ import {
   House,
   MessageCircle,
   Search,
+  SquarePlay,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -40,6 +41,33 @@ const SidebarNavbar = () => {
   const toggleSearchBar = () => setSearchOpen((prev) => !prev);
   const toggleNotificationsPanel = () => setNotificationsOpen((prev) => !prev);
 
+  const NavItem = [
+    {
+      id: 1,
+      name: "Home",
+      icon: House,
+    },
+    {
+      id: 2,
+      name: "Explore",
+      icon: Bomb,
+    },
+    {
+      id: 3,
+      name: "Search",
+      icon: Search,
+    },
+    {
+      id: 4,
+      name: "Reels",
+      icon: SquarePlay,
+    },
+    {
+      id: 5,
+      name: "Profile",
+      icon: UserRound,
+    },
+  ];
   return (
     <div className="relative">
       <div
@@ -78,7 +106,7 @@ const SidebarNavbar = () => {
             <li>
               <button
                 onClick={toggleSearchBar}
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
+                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 w-full ${
                   pathname === "/user/search" || isSearchOpen
                     ? "bg-gray-200 font-semibold"
                     : ""
@@ -91,7 +119,7 @@ const SidebarNavbar = () => {
             <li>
               <button
                 onClick={toggleNotificationsPanel}
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
+                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 w-full ${
                   pathname === "/user/notifications" || isNotificationsOpen
                     ? "bg-gray-200 font-semibold"
                     : ""
@@ -128,6 +156,26 @@ const SidebarNavbar = () => {
           </ul>
         </nav>
       </div>
+      {/* mobile navber  */}
+      <nav className="absolute bg-red-600 buttom-0 left-0 z-50 ">
+        <ul className="flex md:hidden ">
+          {NavItem.map((item) => {
+            return (
+              <li className="flex bg-green-500 flex-col" key={item.id}>
+                <Link
+                  href="/user/me"
+                  className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
+                    pathname === item.name ? "bg-gray-200 font-semibold" : ""
+                  }`}
+                >
+                  <item.icon />
+                  <span>{item.name}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
       <SlidingSearchBar isOpen={isSearchOpen} onClose={toggleSearchBar} />
       <SlidingNotificationsPanel
         isOpen={isNotificationsOpen}

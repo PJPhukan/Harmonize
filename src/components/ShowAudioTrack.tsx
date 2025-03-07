@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { Pause, Play } from "lucide-react";
 import { IoMdHeart } from "react-icons/io";
 import { IoMdHeartEmpty } from "react-icons/io";
+import PostOwner from "./postOwner";
 const ShowAudioTrack = ({
   audio,
   isUser,
@@ -72,29 +73,14 @@ const ShowAudioTrack = ({
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
-  const customLoader = ({ src }: { src: string }) => src;
   return (
     <div className="w-full  rounded-md mt-3 overflow-hidden min-h-[5rem] p-1 border-b">
-      <div className="flex justify-between items-center gap-3 flex-col md:flex-row  ">
-        <div className="flex gap-3">
-          <Image
-            loader={customLoader}
-            src={avatar ? avatar : dummyImg}
-            alt="profile"
-            width={40}
-            height={40}
-            className="rounded-full img"
-          />
-          <h2 className="font-semibold text-gray-700 flex items-center text-nowrap">
-            {name}
-          </h2>
-        </div>
-        {!isUser && (
-          <Button className="bg-blue-500 rounded-full font-semibold text-white flex items-center ">
-            {isConnected ? " Remove" : "+ Connect"}
-          </Button>
-        )}
-      </div>
+      <PostOwner
+        name={name}
+        avatar={avatar}
+        isUser={isUser}
+        isConnected={isConnected}
+      />
       <div className="flex gap-3 items-center  justify-start bg-gray-200 p-2 rounded-md mt-1">
         <div className="h-[6rem] w-[8rem] bg-red-500 flex justify-center items-center rounded-md">
           {play ? (

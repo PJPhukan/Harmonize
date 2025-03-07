@@ -69,18 +69,13 @@ const SlidingNotificationsPanel: React.FC<SlidingNotificationsPanelProps> = ({
     );
   };
 
-  const sayHello = () => {
-    console.log("Hello this is from notifications");
-  };
-  useEffect(() => {
-    sayHello();
-  }, []);
+ 
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      } sliding-panel`}
+    className={`fixed top-0 left-0 h-full w-[24rem] bg-white shadow-lg z-50 transform transition-transform duration-300 text-black ${
+      isOpen ? "translate-x-0" : "-translate-x-full"
+    } `}
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
         <h2 className="text-lg font-semibold">Notifications</h2>

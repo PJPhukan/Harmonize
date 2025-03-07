@@ -101,7 +101,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             }
         ]);
 
-        console.log("Get all connected user post Post :", posts)
+        // console.log("Get all connected user post Post :", posts)
 
         return NextResponse.json({
             success: true,

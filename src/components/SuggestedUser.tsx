@@ -35,53 +35,56 @@ const SuggestedUser = () => {
   };
   return (
     // TODO: Check on responsive time
-    <div className="h-screen sticky top-0 right-0  flex-col justify-between hidden  md:flex">
-      {/* Suggested Artists Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-800 text-nowrap">
-            Suggested Artists
-          </h3>
-          <button className="text-sm text-blue-500">Refresh</button>
-        </div>
-        <div className="flex flex-col gap-2 max-h-[70vh] overflow-y-auto scrollbar-hide px-2">
-          {suggestedUserDetails &&
-            suggestedUserDetails.map((user, index) => (
-              <SGUser user={user} key={index} />
-            ))}
-        </div>
-      </div>
+    <div className="flex space-y-4 py-4 flex-col h-screen sticky top-0 right-0">
+      <div className="px-7 py-5 flex-1 flex justify-between flex-col w-full">
+        
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 text-nowrap">
+                Suggested Artists
+              </h3>
+              <button className="text-sm text-blue-500">Refresh</button>
+            </div>
+            <div className="flex flex-col gap-2 max-h-[70vh] overflow-y-auto scrollbar-hide px-2">
+              {suggestedUserDetails &&
+                suggestedUserDetails.map((user, index) => (
+                  <SGUser user={user} key={index} />
+                ))}
+            </div>
+          </div>
 
-      {/* Footer Section */}
-      <div className="mt-6 text-xs text-gray-500">
-        <p className="text-center">
-          About · Help · Blog · Careers · Press · Terms of Use · Privacy Policy
-          · Contact Us
-        </p>
-        <div className="mt-2 flex flex-wrap justify-center space-x-2">
-          <a href="#" className="hover:underline">
-            Discord
-          </a>
-          <a href="#" className="hover:underline">
-            Facebook
-          </a>
-          <a href="#" className="hover:underline">
-            Instagram
-          </a>
-          <a href="#" className="hover:underline">
-            Reddit
-          </a>
-          <a href="#" className="hover:underline">
-            TikTok
-          </a>
-          <a href="#" className="hover:underline">
-            Twitter
-          </a>
-          <a href="#" className="hover:underline">
-            YouTube
-          </a>
-        </div>
-        <p className="mt-2 text-center">© 2024 Resonate Technologies</p>
+          {/* Footer Section */}
+          <div className="mt-6 text-xs text-gray-500">
+            <p className="text-center">
+              About · Help · Blog · Careers · Press · Terms of Use · Privacy
+              Policy · Contact Us
+            </p>
+            <div className="mt-2 flex flex-wrap justify-center space-x-2">
+              <a href="#" className="hover:underline">
+                Discord
+              </a>
+              <a href="#" className="hover:underline">
+                Facebook
+              </a>
+              <a href="#" className="hover:underline">
+                Instagram
+              </a>
+              <a href="#" className="hover:underline">
+                Reddit
+              </a>
+              <a href="#" className="hover:underline">
+                TikTok
+              </a>
+              <a href="#" className="hover:underline">
+                Twitter
+              </a>
+              <a href="#" className="hover:underline">
+                YouTube
+              </a>
+            </div>
+            <p className="mt-2 text-center">© 2024 Resonate Technologies</p>
+          </div>
+        {/* </div> */}
       </div>
     </div>
   );

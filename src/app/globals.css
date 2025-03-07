@@ -17,15 +17,7 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
-.sliding-panel {
-  width: 20%; /* Set width as a percentage */
-}
 
-@media (min-width: 768px) {
-  .sliding-panel {
-    width: 18%; /* Adjust for larger screens */
-  }
-}
 .img {
   width: 40px;
   height: 40px;

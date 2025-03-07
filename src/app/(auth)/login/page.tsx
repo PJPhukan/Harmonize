@@ -54,7 +54,7 @@ const Page = () => {
       if (response.data.success) {
         setSuccessMsg("Successfully user logged in");
         // console.log("User successfully signed in ");
-        router.replace('/user');
+        router.replace('/dashboard');
       } else {
         setErrorMsg(response.data.message);
       }

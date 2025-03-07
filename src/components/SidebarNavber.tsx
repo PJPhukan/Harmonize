@@ -1,19 +1,29 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+
 import {
   Bell,
-  Bomb,
-  House,
-  MessageCircle,
-  Search,
-  SquarePlay,
-  UserRound,
+  ClapperboardIcon,
+  CompassIcon,
+  Home,
+  LogOut,
+  SearchIcon,
+  SettingsIcon,
+  UsersIcon,
 } from "lucide-react";
-import Link from "next/link";
+
 import { usePathname } from "next/navigation";
 import SlidingSearchBar from "./SlidingSearchBar";
 import SlidingNotificationsPanel from "./SlidingNotificationsPanel";
 import axios from "axios";
+import { cn } from "@/lib/utils";
+import { Montserrat } from "next/font/google";
+import { Button } from "./ui/button";
+
+const montserret = Montserrat({ weight: "600", subsets: ["latin"] });
 
 const SidebarNavbar = () => {
   interface Notification {
@@ -27,155 +37,113 @@ const SidebarNavbar = () => {
   const pathname = usePathname();
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [isNotificationsOpen, setNotificationsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([
-    // { id: 1, type: "info", message: "You have a new friend request." },
-    // {
-    //   id: 2,
-    //   type: "connection-request",
-    //   message: "Parag Jy Phukan has sent you a connection request.",
-    //   from: "Parag Jy Phukan",
-    // },
-    // { id: 3, type: "info", message: "Your post received 5 new likes!" },
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const toggleSearchBar = () => setSearchOpen((prev) => !prev);
   const toggleNotificationsPanel = () => setNotificationsOpen((prev) => !prev);
 
-  const NavItem = [
+  const userLogOut = async () => {
+    console.log("User logout button was clicked");
+  };
+
+  const routes = [
     {
-      id: 1,
-      name: "Home",
-      icon: House,
+      label: "Home",
+      icon: Home,
+      url: "/dashboard",
+      color: "text-sky-500",
     },
     {
-      id: 2,
-      name: "Explore",
-      icon: Bomb,
+      label: "Explore",
+      icon: CompassIcon,
+      url: "/explore",
+      color: "text-violet-500",
     },
     {
-      id: 3,
-      name: "Search",
-      icon: Search,
+      label: "Reels",
+      icon: ClapperboardIcon,
+      url: "/reels",
+      color: "text-pink-700",
     },
     {
-      id: 4,
-      name: "Reels",
-      icon: SquarePlay,
+      label: "Search",
+      icon: SearchIcon,
+      url: "",
+      toggleSliding: toggleSearchBar,
+      color: "text-orange-700",
     },
     {
-      id: 5,
-      name: "Profile",
-      icon: UserRound,
+      label: "Notification",
+      icon: Bell,
+      url: "",
+      toggleSliding: toggleNotificationsPanel,
+      color: "text-green-700",
+    },
+    {
+      label: "Connections",
+      icon: UsersIcon,
+      url: "/connections",
+      color: "text-emerald-700",
+    },
+    {
+      label: "Settings",
+      icon: SettingsIcon,
+      url: "/settings",
+      color: "text-white",
     },
   ];
   return (
-    <div className="relative">
-      <div
-        id="sidebar"
-        className="w-full bg-white border-b lg:border-b-0 lg:border-r border-gray-200 py-4 px-6 overflow-x-hidden overflow-y-auto scrollbar-hide relative"
-      >
-        <h1 className="text-xl font-bold text-purple-600 mb-6 text-center lg:text-left">
-          Harmonize
-        </h1>
-        <nav>
-          <ul className="flex justify-start gap-2 flex-col mt-10">
-            <li>
+    <div className="flex space-y-0 py-4 flex-col h-full bg-[#111827] text-white z-40 ">
+      <div className="px-7 py-5 flex-1">
+        <Link href="/dashboard" className="flex items-center pl-3 mb-14">
+          <div className="relative h-11 w-14 mr-2">
+            <Image fill alt="Logo" src="/logo.png" />
+          </div>
+          <div className={cn("text-2xl font-bold")}>Harmonize</div>
+        </Link>
+        <div className="space-y-1 ">
+          {routes.map((route) => {
+            return route.url != "" ? (
               <Link
-                href="/user"
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
-                  pathname === "/user" ? "bg-gray-200 font-semibold" : ""
-                }`}
+                href={route.url}
+                key={route.url}
+                className={cn("text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition",  pathname === route.url
+                  ? "text-white bg-white/10"
+                  : " text-zinc-400")}
+                
               >
-                <House />
-                <span>Home</span>
+                <div className="flex items-center flex-1 gap-2">
+                  <route.icon className={(cn("h-4 w-4 mr-3"), route.color)} />
+                  {route.label}
+                </div>
               </Link>
-            </li>
-            <li>
-              <Link
-                href="/user/explore"
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
-                  pathname.includes("/user/explore")
-                    ? "bg-gray-200 font-semibold"
-                    : ""
-                }`}
+            ) : (
+              <div
+                key={route.label}
+                className=" text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition text-zinc-400 "
+                onClick={route.toggleSliding}
               >
-                <Bomb />
-                <span>Explore</span>
-              </Link>
-            </li>
-            <li>
-              <button
-                onClick={toggleSearchBar}
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 w-full ${
-                  pathname === "/user/search" || isSearchOpen
-                    ? "bg-gray-200 font-semibold"
-                    : ""
-                }`}
-              >
-                <Search />
-                <span>Search</span>
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={toggleNotificationsPanel}
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 w-full ${
-                  pathname === "/user/notifications" || isNotificationsOpen
-                    ? "bg-gray-200 font-semibold"
-                    : ""
-                }`}
-              >
-                <Bell />
-                <span>Notifications</span>
-              </button>
-            </li>
-            <li>
-              <Link
-                href="/user/message"
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
-                  pathname.includes("/user/message")
-                    ? "bg-gray-200 font-semibold"
-                    : ""
-                }`}
-              >
-                <MessageCircle />
-                <span>Messages</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/user/me"
-                className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
-                  pathname === "/user/me" ? "bg-gray-200 font-semibold" : ""
-                }`}
-              >
-                <UserRound />
-                <span>You</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      {/* mobile navber  */}
-      <nav className="absolute bg-red-600 buttom-0 left-0 z-50 ">
-        <ul className="flex md:hidden ">
-          {NavItem.map((item) => {
-            return (
-              <li className="flex bg-green-500 flex-col" key={item.id}>
-                <Link
-                  href="/user/me"
-                  className={`flex items-center space-x-2 text-gray-700 cursor-pointer rounded hover:bg-gray-200 px-2 py-2.5 ${
-                    pathname === item.name ? "bg-gray-200 font-semibold" : ""
-                  }`}
-                >
-                  <item.icon />
-                  <span>{item.name}</span>
-                </Link>
-              </li>
+                <div className="flex items-center flex-1 gap-2">
+                  <route.icon className={(cn("h-4 w-4 mr-3"), route.color)} />
+                  {route.label}
+                </div>
+              </div>
             );
           })}
-        </ul>
-      </nav>
+        </div>
+      </div>
+      <div className="px-7 py-5 ">
+        <div
+          className="text-sm md:text-md group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition"
+          onClick={userLogOut}
+        >
+          <div className="flex items-center flex-1 gap-2">
+            <LogOut className="h-6 w-6 " />
+            Log out
+          </div>
+        </div>
+      </div>
+
       <SlidingSearchBar isOpen={isSearchOpen} onClose={toggleSearchBar} />
       <SlidingNotificationsPanel
         isOpen={isNotificationsOpen}

@@ -13,11 +13,12 @@ const SlidingSearchBar: React.FC<SlidingSearchBarProps> = ({
   isOpen,
   onClose,
 }) => {
+  console.log("Showing pannel");
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+      className={`fixed top-0 left-0 h-full w-full md:w-[24rem] bg-white shadow-lg z-50 transform transition-transform duration-300 text-black ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } sliding-panel`}
+      } `}
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
         <h2 className="text-lg font-semibold">Search</h2>
@@ -57,7 +58,9 @@ const SlidingSearchBar: React.FC<SlidingSearchBarProps> = ({
             </div>
           </div>
 
-          <Button className="bg-blue-500 rounded-full">+ Connect</Button>
+          <span className="bg-blue-200 font-semibold text-blue-600 px-4 py-2 rounded-md flex my-auto">
+            Connect
+          </span>
         </Link>
       </div>
     </div>

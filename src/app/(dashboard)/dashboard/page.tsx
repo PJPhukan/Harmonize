@@ -43,6 +43,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileUploader } from "@/components/media/file-uploader";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const page = () => {
   const [errorMsg, setErrorMsg] = useState("");
@@ -104,12 +105,9 @@ const page = () => {
   const [isSubmittingForm, setIsSubmittingForm] = useState(false);
   const router = useRouter();
   const onSubmit = (data: z.infer<typeof uploadSchema>) => {
-    // console.log("Submit form", data);
     setIsSubmittingForm(true);
-    // console.log("Other data:", data.post);
     SonnerToast.promise(
       onUpload(data.post).then(async (dt) => {
-        // console.log("DATA : ", data);
         if (data && dt && dt[0]?.url) {
           data.postURL = dt[0].url;
           data.type = dt[0].type;
@@ -136,6 +134,7 @@ const page = () => {
     );
   };
   const customLoader = ({ src }: { src: string }) => src;
+
   return (
     <div className="flex">
       <section className="w-full md:w-[62.5%] mt-6">
@@ -143,16 +142,11 @@ const page = () => {
           <DialogTrigger asChild>
             <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
               <div className="flex items-center justify-between  w-full">
-                <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
-                  <Image
-                    loader={customLoader}
-                    src={user?.avatar ? user.avatar : dummyImg}
-                    alt="profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                </div>
+                <Avatar>
+                  
+                  <AvatarImage src={user?.avatar} alt="@shadcn" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
                 <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
                   What's cooking?
                 </p>
@@ -328,7 +322,7 @@ const page = () => {
           </button>
         </div>
       </section>
-      <div className="w-full md:w-[30%] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 h-screen sticky top-0 right-0">
+      <div className="w-full hidden md:block md:w-[24rem] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 h-screen sticky top-0 right-0">
         <SuggestedUser />
       </div>
     </div>

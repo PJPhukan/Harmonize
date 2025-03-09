@@ -143,7 +143,6 @@ const page = () => {
             <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
               <div className="flex items-center justify-between  w-full">
                 <Avatar>
-                  
                   <AvatarImage src={user?.avatar} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
@@ -159,14 +158,10 @@ const page = () => {
             </DialogHeader>
             <div className="w-full relative">
               <div className="flex gap-3">
-                <Image
-                  loader={customLoader}
-                  src={user?.avatar ? user.avatar : dummyImg}
-                  alt="profile"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+                <Avatar>
+                  <AvatarImage src={user?.avatar} />
+                  <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                </Avatar>
                 <h2 className="font-semibold text-gray-700 flex items-center text-nowrap">
                   {user?.name}
                 </h2>

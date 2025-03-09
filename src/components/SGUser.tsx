@@ -57,11 +57,10 @@ const SGUser = ({
       {/* Connect Button */}
       <button
         type="button"
-        className="px-3 py-1 text-sm text-white bg-pink-500 rounded-full hover:bg-pink-600 transition text-nowrap"
+        className="px-3 py-1 text-sm text-white bg-blue-500 rounded-full hover:bg-pink-600 transition text-nowrap"
         onClick={() => ConnectionRequest(user._id)}
       >
         {isRequest ? "Cancel" : <UserRoundPlus />}
-        <span className="hidden">connect</span>
       </button>
     </div>
   );

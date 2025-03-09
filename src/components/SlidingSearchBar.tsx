@@ -13,7 +13,6 @@ const SlidingSearchBar: React.FC<SlidingSearchBarProps> = ({
   isOpen,
   onClose,
 }) => {
-  console.log("Showing pannel");
   return (
     <div
       className={`fixed top-0 left-0 h-full w-full md:w-[24rem] bg-white shadow-lg z-50 transform transition-transform duration-300 text-black ${

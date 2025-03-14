@@ -56,7 +56,9 @@ const config: Config = {
 				'custom-pattern': "url('/HomeBgImg.jpg')"
 			},
 			fontFamily: {
-				'custom': "['Sevillana', 'Arial', sans-serif']"
+				'custom': "['Sevillana', 'Arial', sans-serif']",
+				'number': "['Irish Grover', system-ui]"
+
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

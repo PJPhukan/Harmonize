@@ -2,7 +2,16 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import dummyImg from "@/assets/architecture.jpg";
-import { AudioWaveform, Edit, Edit2, Play, Users } from "lucide-react";
+import {
+  AudioWaveform,
+  Edit,
+  Edit2,
+  Music2,
+  Play,
+  PlayIcon,
+  UserRound,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import ShowAudioTrack from "@/components/ShowAudioTrack";
 import UserActivity from "@/components/UserActivity";
@@ -51,6 +60,9 @@ import { uploadSchema } from "@/schemas/post.Schema";
 import { FileUploader } from "@/components/media/file-uploader";
 import { User } from "@/types/user.types";
 import { Post } from "@/types/post";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { socialMedia } from "@/data";
+import FindMeOnItem from "@/components/FindMeOnItem";
 const page = () => {
   const [activity, setActivity] = useState(true);
   const [tracks, setTracks] = useState(false);
@@ -120,7 +132,7 @@ const page = () => {
             title: "Success",
             description: response.data.message,
           });
-          router.replace(`/user`);
+          router.replace(`/dashboard`);
         }
         setIsSubmittingForm(false);
       }),
@@ -211,26 +223,40 @@ const page = () => {
     }
   };
 
+  const mediaDetails = [
+    {
+      label: "Connections",
+      icon: UserRound,
+      total: totalConnections,
+    },
+    {
+      label: "Audio Track",
+      icon: Music2,
+      total: totalTracks,
+    },
+    {
+      label: "User Played",
+      icon: PlayIcon,
+      total: 980,
+    },
+  ];
+
   const customLoader = ({ src }: { src: string }) => src;
   const isUser = true;
   return (
     user && (
-      <div className="flex-1 px-3 md:px-5 py-1 w-[75vw]">
+      <div className="flex-1 px-3 md:px-5 py-1 w-full md:w-[73vw] mt-20 md:mt-0 mb-[80px] overflow-x-hidden ">
         {/* profile  */}
         <div className="bg-gray-200 rounded-md mt-3 overflow-hidden min-h-[10rem] ">
           <div className="flex justify-between items-center gap-3 flex-col md:flex-row p-3 mt-[2rem] md:mt-[5rem]">
             <div className="flex flex-col  md:flex-row gap-3 items-center">
               <div className="flex flex-col gap-3 items-center">
-                <Image
-                  loader={customLoader}
-                  src={user.avatar}
-                  alt="profile"
-                  width={130}
-                  height={130}
-                  className="rounded-full"
-                />
+                <Avatar className="w-20 h-20 md:w-40 md:h-40 ">
+                  <AvatarImage src={user?.avatar} alt="Profile" />
+                  <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                </Avatar>
                 <Link
-                  href="/user/me/edit"
+                  href="/dashboard/me/edit"
                   className="flex gap-1 bg-gray-600 text-white px-3 py-1.5 rounded-full "
                 >
                   <Edit2 width={20} />
@@ -274,28 +300,71 @@ const page = () => {
             </div>
 
             {/* connection  */}
-            <div className="flex gap-3 items-center mt-3 md:mt-0 mr-3">
-              <div className="flex flex-col items-center font-extrabold">
-                <p className="text-xl">{totalConnections}</p>
-                <p className="">Connections</p>
-              </div>
-              <div className="flex flex-col items-center font-extrabold">
-                <p className="text-xl">{totalTracks}</p>
-                <p className="">Tracks</p>
-              </div>
+            <div className="flex gap-2 md:gap-3 items-center mt-3 md:mt-0 md:mr-3  w-full md:w-1/2 justify-center md:justify-end">
+              {mediaDetails.map((media) => (
+                <div
+                  key={media.label}
+                  className="flex flex-col justify-center items-center font-extrabold w-1/3 md:w-1/4 bg-white rounded-md  h-20 md:h-28 relative shadow-md inset-2"
+                >
+                  <p className="text-3xl md:text-5xl number-font">
+                    {media.total > 999
+                      ? `${(media.total / 1000).toFixed(1)}K`
+                      : media.total}
+                  </p>
+                  <p className="">{media.label}</p>
+                  <span className="absolute w-full h-full opacity-10 flex justify-center items-center">
+                    <media.icon className="w-full h-full"/>
+                  </span>
+                </div>
+              ))}
+            </div>
 
-              <div className="flex flex-col items-center font-extrabold">
-                <p className="text-xl">9.2K</p>
-                <p className="">Plays</p>
-              </div>
+            {/* user social media links  */}
+
+            <div className="flex md:hidden aspect-auto gap-1">
+              {user.spotify && (
+                <FindMeOnItem
+                  data={{
+                    url: "/social/spotify.png",
+                    label: "Spotify",
+                  }}
+                  link={user.spotify}
+                />
+              )}
+              {user.website && (
+                <FindMeOnItem
+                  data={{
+                    url: "/social/website.png",
+                    label: "Website",
+                  }}
+                  link={user.website}
+                />
+              )}
+              {user.youtube && (
+                <FindMeOnItem
+                  data={{
+                    url: "/social/youtube.png",
+                    label: "Youtube",
+                  }}
+                  link={user.youtube}
+                />
+              )}
+              {user.otherLink.map((link) => {
+                const matchedMedia = socialMedia.find((media) =>
+                  link.includes(media.label.toLowerCase())
+                );
+                return matchedMedia ? (
+                  <FindMeOnItem key={link} data={matchedMedia} link={link} />
+                ) : null;
+              })}
             </div>
           </div>
         </div>
         {/* navber */}
-        <p className="h-1 border-b mt-4" />
+        <p className="h-1 border-b mt-4 w-full " />
         {userPosts && (
           <div className="flex">
-            <div className="mt-2 w-2/3 ">
+            <div className="mt-2 md:w-2/3 ">
               <ul className="flex gap-2 md:gap-6 justify-center">
                 <li
                   className={`text-gray-600 py-2 cursor-pointer ${
@@ -336,16 +405,12 @@ const page = () => {
                   <DialogTrigger asChild>
                     <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
                       <div className="flex items-center justify-between  w-full">
-                        <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
-                          <Image
-                            loader={customLoader}
-                            src={user.avatar ? user.avatar : dummyImg}
-                            alt="profile"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
-                        </div>
+                        <Avatar>
+                          <AvatarImage src={user?.avatar} alt="@shadcn" />
+                          <AvatarFallback>
+                            {user?.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
                         <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
                           What's cooking?
                         </p>
@@ -404,9 +469,6 @@ const page = () => {
                             render={({ field }) => (
                               <div className="space-y-6">
                                 <FormItem className="w-full">
-                                  {/* <FormLabel className="text-base md:text-lg font-medium">
-                                
-                              </FormLabel> */}
                                   <FormControl>
                                     <FileUploader
                                       value={field.value}
@@ -414,8 +476,6 @@ const page = () => {
                                       maxFileCount={1}
                                       maxSize={4 * 1024 * 1024}
                                       progresses={progresses}
-                                      // pass the onUpload function here for direct upload
-                                      //   onUpload={onUpload}
                                       disabled={isUploading || isSubmittingForm}
                                     />
                                   </FormControl>
@@ -566,9 +626,6 @@ const page = () => {
                                 render={({ field }) => (
                                   <div className="space-y-6">
                                     <FormItem className="w-full">
-                                      {/* <FormLabel className="text-base md:text-lg font-medium">
-                                
-                              </FormLabel> */}
                                       <FormControl>
                                         <FileUploader
                                           value={field.value}
@@ -576,8 +633,6 @@ const page = () => {
                                           maxFileCount={1}
                                           maxSize={4 * 1024 * 1024}
                                           progresses={progresses}
-                                          // pass the onUpload function here for direct upload
-                                          //   onUpload={onUpload}
                                           disabled={
                                             isUploading || isSubmittingForm
                                           }
@@ -636,9 +691,47 @@ const page = () => {
               </div>
               {/* Content  */}
             </div>
-            <div className="mt-4 w-1/3">
+            <div className="mt-4 w-1/3 md:block hidden justify-center pl-3">
               {/* TODO: Add social media icons */}
-              <p>Find me on</p>
+              <p className=" pb-3 font-semibold text-xl">Find me on</p>
+
+              <div className="flex flex-col gap-1 items-center ">
+                {user.spotify && (
+                  <FindMeOnItem
+                    data={{
+                      url: "/social/spotify.png",
+                      label: "Spotify",
+                    }}
+                    link={user.spotify}
+                  />
+                )}
+                {user.website && (
+                  <FindMeOnItem
+                    data={{
+                      url: "/social/website.png",
+                      label: "Website",
+                    }}
+                    link={user.website}
+                  />
+                )}
+                {user.youtube && (
+                  <FindMeOnItem
+                    data={{
+                      url: "/social/youtube.png",
+                      label: "Youtube",
+                    }}
+                    link={user.youtube}
+                  />
+                )}
+                {user.otherLink.map((link) => {
+                  const matchedMedia = socialMedia.find((media) =>
+                    link.includes(media.label.toLowerCase())
+                  );
+                  return matchedMedia ? (
+                    <FindMeOnItem key={link} data={matchedMedia} link={link} />
+                  ) : null;
+                })}
+              </div>
             </div>
           </div>
         )}

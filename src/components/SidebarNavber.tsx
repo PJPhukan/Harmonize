@@ -12,6 +12,7 @@ import {
   LogOut,
   SearchIcon,
   SettingsIcon,
+  User,
   UsersIcon,
 } from "lucide-react";
 
@@ -84,6 +85,12 @@ const SidebarNavbar = () => {
       icon: UsersIcon,
       url: "/dashboard/connections",
       color: "text-emerald-700",
+    },
+    {
+      label: "Me",
+      icon: User,
+      url: "/dashboard/me",
+      color: "text-emerald-200",
     },
     {
       label: "Settings",

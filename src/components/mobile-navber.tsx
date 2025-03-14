@@ -4,10 +4,7 @@ import {
   ClapperboardIcon,
   CompassIcon,
   Home,
-  MessageCircleHeartIcon,
-  SearchIcon,
   SettingsIcon,
-  UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";

@@ -38,7 +38,7 @@ const SlidingSearchBar: React.FC<SlidingSearchBarProps> = ({
 
       <div className="flex justify-between w-full px-3 flex-col gap-2">
         <Link
-          href="/user/profile/234"
+          href="/dashboard/profile/234"
           className="flex justify-between  bg-gray-200 px-5 py-2 rounded-md"
         >
           <div className="flex gap-2 items-center">

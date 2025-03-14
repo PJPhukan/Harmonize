@@ -74,7 +74,7 @@ const UploadMedia = ({ newPost }: { newPost: boolean }) => {
         //     title: "Success",
         //     description: response.data.message,
         //   });
-        //   router.replace(`/user`);
+        //   router.replace(`/dashboard`);
         // }
         setIsSubmittingForm(false);
       }),

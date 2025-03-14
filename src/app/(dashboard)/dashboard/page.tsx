@@ -119,7 +119,7 @@ const page = () => {
             title: "Success",
             description: response.data.message,
           });
-          router.replace(`/user`);
+          router.replace(`/dashboard`);
         }
         setIsSubmittingForm(false);
       }),
@@ -136,15 +136,15 @@ const page = () => {
   const customLoader = ({ src }: { src: string }) => src;
 
   return (
-    <div className="flex">
-      <section className="w-full md:w-[62.5%] mt-6">
+    <div className="flex ">
+      <section className="w-full md:w-[62.5%] mt-6 ">
         <Dialog>
           <DialogTrigger asChild>
             <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
               <div className="flex items-center justify-between  w-full">
                 <Avatar>
                   <AvatarImage src={user?.avatar} alt="@shadcn" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
                   What's cooking?

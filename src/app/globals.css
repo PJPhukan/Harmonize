@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400..800&family=Dancing+Script:wght@400..700&family=Quicksand:wght@300..700&family=Sevillana&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -76,6 +77,11 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+.number-font{
+  font-family: "Irish Grover", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
 @layer base {
   * {

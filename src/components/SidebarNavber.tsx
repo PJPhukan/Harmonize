@@ -56,13 +56,13 @@ const SidebarNavbar = () => {
     {
       label: "Explore",
       icon: CompassIcon,
-      url: "/explore",
+      url: "/dashboard/explore",
       color: "text-violet-500",
     },
     {
       label: "Reels",
       icon: ClapperboardIcon,
-      url: "/reels",
+      url: "/dashboard/reels",
       color: "text-pink-700",
     },
     {
@@ -82,13 +82,13 @@ const SidebarNavbar = () => {
     {
       label: "Connections",
       icon: UsersIcon,
-      url: "/connections",
+      url: "/dashboard/connections",
       color: "text-emerald-700",
     },
     {
       label: "Settings",
       icon: SettingsIcon,
-      url: "/settings",
+      url: "/dashboard/settings",
       color: "text-white",
     },
   ];

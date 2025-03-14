@@ -38,7 +38,7 @@ const ShowVideo = ({
         <IoMdHeart width={40} height={40} />
         <IoMdHeartEmpty />
       </div> */}
-      <p className="font-semibold text-gray-700 flex items-center text-nowrap mt-1 mb-2">
+      <p className="font-semibold text-gray-700 flex items-center text-wrap md:text-nowrap mt-1 mb-2">
         {video.description}
       </p>
     </div>

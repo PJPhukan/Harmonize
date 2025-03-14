@@ -12,7 +12,7 @@ export const varificationEmail = async ({ email, username, otp }: varificationEm
         const { data, error } = await resend.emails.send({
             from: 'Acme <onboarding@resend.dev>',
             to: email,
-            subject: "Resonate verification code",
+            subject: "Harmonize verification code",
             react: VerificationEmailTemplate({ username, otp }),
         });
 

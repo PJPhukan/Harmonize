@@ -42,7 +42,7 @@ const ShowPost = ({
         <IoMdHeart width={40} height={40} />
         <IoMdHeartEmpty />
       </div>
-      <p className="font-semibold text-gray-700 flex items-center text-nowrap mt-1 mb-2">
+      <p className="font-semibold text-gray-700 flex items-center md:text-nowrap mt-1 mb-2 text-wrap">
         {post.description}
       </p>
     </div>

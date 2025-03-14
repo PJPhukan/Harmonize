@@ -39,10 +39,10 @@ const SuggestedUser = () => {
     }
   };
 
-  const RefreshSuggested=async()=>{
-    setisRefresh(!isRefresh)
+  const RefreshSuggested = async () => {
+    setisRefresh(!isRefresh);
+  };
 
-  }
   return (
     // TODO: Check on responsive time
     <div className="flex space-y-4 py-4 flex-col h-screen sticky top-0 right-0">
@@ -52,7 +52,10 @@ const SuggestedUser = () => {
             <h3 className="text-lg font-semibold text-gray-800 text-nowrap">
               Suggested Artists
             </h3>
-            <Button className="bg-transparent hover:bg-transparent text-sm text-blue-500  px-3 py-1 border-2 rounded-sm" onClick={RefreshSuggested}>
+            <Button
+              className="bg-transparent hover:bg-transparent text-sm text-blue-500  px-3 py-1 border-2 rounded-sm"
+              onClick={RefreshSuggested}
+            >
               {isRefresh ? (
                 <>
                   <Loader2 className="mr-2 w-4 h-4 animate-spin" />
@@ -68,6 +71,9 @@ const SuggestedUser = () => {
               suggestedUserDetails.map((user, index) => (
                 <SGUser user={user} key={index} />
               ))}
+            {suggestedUserDetails.length == 0 && (
+              <div className="text-center mt-6 uppercase">No user found for you !</div>
+            )}
           </div>
         </div>
 

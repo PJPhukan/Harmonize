@@ -21,12 +21,12 @@ const routes = [
   {
     label: "Explore",
     icon: CompassIcon,
-    url: "/explore",
+    url: "/dashboard/explore",
   },
   {
     label: "Create",
     icon: CirclePlusIcon,
-    url: "/create",
+    url: "/dashboard/create",
     color: "text-orange-700",
     width: "h-10",
     height: "w-10",
@@ -34,13 +34,13 @@ const routes = [
   {
     label: "Reels",
     icon: ClapperboardIcon,
-    url: "/reels",
+    url: "/dashboard/reels",
   },
 
   {
     label: "Me",
     icon: SettingsIcon,
-    url: "/settings",
+    url: "/dashboard/settings",
   },
 ];
 const MobileNavber = () => {

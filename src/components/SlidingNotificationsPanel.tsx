@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -24,7 +25,6 @@ const SlidingNotificationsPanel: React.FC<SlidingNotificationsPanelProps> = ({
 
   //fetch all notifications
   const fetchNotifications = async () => {
-    // console.log("fetching notifications");
     try {
       const response = await axios.get("/api/get-all-notification");
       console.log(response.data.data);
@@ -45,6 +45,7 @@ const SlidingNotificationsPanel: React.FC<SlidingNotificationsPanelProps> = ({
     notificationId: string,
     requesterId: string
   ) => {
+    console.log("Message accepting by the user ")
     try {
       const response = await axios.patch("/api/connection-accept", {
         notificationId,requesterId
@@ -61,13 +62,7 @@ const SlidingNotificationsPanel: React.FC<SlidingNotificationsPanelProps> = ({
       console.log("Error occured while accepting notification", error);
     }
   };
-  const handleAcceptRequest = (id: string) => {
-    // Simulate accepting a request
-    alert("Connection request accepted!");
-    setNotifications((prev) =>
-      prev?.filter((notification) => notification._id !== id)
-    );
-  };
+  
 
  
 
@@ -95,7 +90,7 @@ const SlidingNotificationsPanel: React.FC<SlidingNotificationsPanelProps> = ({
             >
               {/* {console.log("Notification", notification)} */}
               <p>{notification.message}</p>
-              {notification.requester && (
+              {notification?.message.match("sent you a connection request") && (
                 <div className="mt-2 flex justify-end space-x-2">
                   <button
                     onClick={() =>

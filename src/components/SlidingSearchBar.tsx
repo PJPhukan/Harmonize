@@ -1,9 +1,9 @@
 "use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 import dummyImg from "@/assets/userAvatar.jpg";
-import Image from "next/image";
-import { Button } from "./ui/button";
 interface SlidingSearchBarProps {
   isOpen: boolean;
   onClose: () => void;

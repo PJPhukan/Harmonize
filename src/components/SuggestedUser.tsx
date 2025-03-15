@@ -27,14 +27,12 @@ const SuggestedUser = () => {
   const getSuggestedUser = async () => {
     try {
       const response = await axios.get("/api/suggested-user");
-      console.log("Suggested user Response", response);
       if (response.data.success) {
         setSuggestedUserDetails(response.data.data);
       } else {
         console.log(response.data.message);
       }
     } catch (error) {
-      console.log("Error occured while fetching user follow content", error);
       setErrorMsg("Internal server error");
     }
   };
@@ -46,7 +44,7 @@ const SuggestedUser = () => {
   return (
     // TODO: Check on responsive time
     <div className="flex space-y-4 py-4 flex-col h-screen sticky top-0 right-0">
-      <div className="px-7 py-5 flex-1 flex justify-between flex-col w-full">
+      <div className="px-7 py-5 flex-1 flex justify-between flex-col w-full pt-0">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-800 text-nowrap">

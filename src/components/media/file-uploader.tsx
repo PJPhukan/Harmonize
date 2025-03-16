@@ -62,8 +62,8 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Maximum file size for the uploader.
    * @type number | undefined
-   * @default 1024 * 1024 * 2 // 2MB
-   * @example maxSize={1024 * 1024 * 2} // 2MB
+   * @default 1024 * 1024 * 50 // 100MB
+   * @example maxSize={1024 * 1024 * 50} // 2MB
    */
   maxSize?: DropzoneProps["maxSize"];
 
@@ -202,7 +202,7 @@ export function FileUploader(props: FileUploaderProps) {
           <div
             {...getRootProps()}
             className={cn(
-              "group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25",
+              "group relative grid h-30 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25",
               "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               isDragActive && "border-muted-foreground/50",
               isDisabled && "pointer-events-none opacity-60",
@@ -212,7 +212,7 @@ export function FileUploader(props: FileUploaderProps) {
           >
             <input {...getInputProps()} />
             {isDragActive ? (
-              <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
+              <div className="flex flex-col items-center justify-center gap-4 sm:px-5 bg-red-400">
                 <div className="rounded-full border border-dashed p-3">
                   <Upload
                     className="size-7 text-muted-foreground"
@@ -224,8 +224,8 @@ export function FileUploader(props: FileUploaderProps) {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
-                <div className="rounded-full border border-dashed p-3">
+              <div className="flex flex-col items-center justify-center gap-2 sm:px-5">
+                <div className="rounded-full border border-dashed px-3">
                   <Upload
                     className="size-7 text-muted-foreground"
                     aria-hidden="true"

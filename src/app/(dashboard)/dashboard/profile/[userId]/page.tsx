@@ -18,8 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { socialMedia } from "@/data";
 import FindMeOnItem from "@/components/FindMeOnItem";
 const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
-
-  //If userId is not valid then redirect to the not found page 
+  //If userId is not valid then redirect to the not found page
   const params = useParams<{ userId: string }>();
   useEffect(() => {
     if (!params?.userId) {
@@ -73,7 +72,9 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
   const [user, setUser] = useState<User>();
   const getUserDetails = async () => {
     try {
-      const response = await axios.get("/api/get-user");
+      const response = await axios.get(
+        `/api/get-user-details/${params.userId}`
+      );
       // console.log("Response", response);
       if (response.data.success) {
         setUser(response.data.data);
@@ -90,8 +91,9 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
   const [totalConnections, setTotalConnections] = useState<number>(0);
   const getTotalConnections = async () => {
     try {
-      const response = await axios.get("/api/get-all-connections");
-      // console.log("Connection Response", response);
+      const response = await axios.get(
+        `/api/get-users-connections/${params.userId}`
+      );
       if (response.data.success) {
         setTotalConnections(response.data.data.totalConnections);
       } else {
@@ -107,7 +109,9 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
   const [totalTracks, setTotalTracks] = useState<number>(0);
   const getTotalTracks = async () => {
     try {
-      const response = await axios.get("/api/get-all-tracks");
+      const response = await axios.get(
+        `/api/get-users-tracks/${params.userId}`
+      );
       console.log("Tracks Response", response);
       if (response.data.success) {
         setTotalTracks(response.data.data.totalTracks);
@@ -124,7 +128,7 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
   const [userPosts, setUserPosts] = useState<Post[]>([]);
   const getUserPosts = async () => {
     try {
-      const response = await axios.get("/api/me-post");
+      const response = await axios.get(`/api/user-posts/${params.userId}`);
       console.log("Posts Response", response);
       if (response.data.success) {
         setUserPosts(response.data.data);

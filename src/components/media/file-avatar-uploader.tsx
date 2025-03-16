@@ -33,7 +33,7 @@ export function AvatarUploader(props: FileUploaderProps) {
     onUpload,
     progresses,
     accept = "image/*",
-    maxSize = 1024 * 1024 * 2, // 2MB
+    maxSize = 1024 * 1024 * 50, // 2MB
     maxFileCount = 1,
     multiple = false,
     disabled = false,

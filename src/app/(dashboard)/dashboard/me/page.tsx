@@ -693,7 +693,7 @@ const page = () => {
             </div>
             <div className="mt-4 w-1/3 md:block hidden justify-center pl-3">
               {/* TODO: Add social media icons */}
-              <p className=" pb-3 font-semibold text-xl">Find me on</p>
+              <p className=" pb-3 font-semibold text-xl">Swipe, tap, and connect! 🌍</p>
 
               <div className="flex flex-col gap-1 items-center ">
                 {user.spotify && (

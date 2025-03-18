@@ -21,5 +21,6 @@ export interface User extends Document {
     youtube: string;
     spotify: string;
     otherLink: string[]
+    user_id?: Types.ObjectId;
 
 }

@@ -42,6 +42,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileUploader } from "@/components/media/file-uploader";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const page = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -143,23 +144,17 @@ const page = () => {
         <section className="w-full md:w-[62.5%] mt-6">
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
-                <div className="flex items-center justify-between  w-full">
-                  <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
-                    <Image
-                      loader={customLoader}
-                      src={user.avatar ? user.avatar : dummyImg}
-                      alt="profile"
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                  </div>
-                  <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
-                    What's cooking?
-                  </p>
-                </div>
-              </Button>
+            <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
+              <div className="flex items-center justify-between  w-full">
+                <Avatar>
+                  <AvatarImage src={user?.avatar} alt="@shadcn" />
+                  <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
+                  What's cooking?
+                </p>
+              </div>
+            </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>

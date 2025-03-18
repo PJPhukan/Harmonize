@@ -33,32 +33,63 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             });
         }
 
-        // Find connections
-        const connections = await ConnectionModel.find({
-            $or: [
-                { requester: user._id, isAccept: true },
-                { requestee: user._id, isAccept: true }
-            ]
-        });
 
-        // Extract connected user IDs
-        const connectedUserIds = connections.map((conn) =>
-            conn.requester.toString() === user._id.toString()
-                ? conn.requestee
-                : conn.requester
-        );
 
-        // Fetch connected users' details
-        const connectedUsers = await UserModel.find({ _id: { $in: connectedUserIds } })
-            .select("name bio avatar location skill website youtube spotify otherLink")
-            .lean();
+        //using aggregation pipeline 
+        const connectedUser = await ConnectionModel.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { requester: user._id, isAccept: true },
+                        { requestee: user._id, isAccept: true }
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    connectedUserId: {
+                        $cond: {
+                            if: { $eq: ["$requester", user._id] },
+                            then: "$requestee",
+                            else: "$requester"
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "connectedUserId",
+                    foreignField: "_id",
+                    as: "userDetails"
+                }
+            },
+            {
+                $unwind: "$userDetails"
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user_id: "$userDetails._id",
+                    name: "$userDetails.name",
+                    bio: "$userDetails.bio",
+                    avatar: "$userDetails.avatar",
+                    location: "$userDetails.location",
+                    skill: "$userDetails.skill",
+                    website: "$userDetails.website",
+                    youtube: "$userDetails.youtube",
+                    spotify: "$userDetails.spotify",
+                    otherLink: "$userDetails.otherLink"
+                }
+            }
+        ])
 
 
         return NextResponse.json({
             success: true,
             message: "Fetched connected users successfully.",
             statusCode: 200,
-            data: connectedUsers
+            data: connectedUser
         });
     } catch (error) {
         console.error("Error fetching connected users:", error);

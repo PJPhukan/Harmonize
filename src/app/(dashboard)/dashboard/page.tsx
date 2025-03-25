@@ -1,28 +1,25 @@
 "use client";
 
-import SuggestedUser from "@/components/SuggestedUser";
-import UserActivity from "@/components/UserActivity";
-import UserPost from "@/components/UserPost";
-import UserTrack from "@/components/UserTrack";
-import UserVideo from "@/components/UserVideo";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import dummyImg from "@/assets/architecture.jpg";
-import { User } from "@/types/user.types";
-import { Post } from "@/types/post";
 import axios from "axios";
-import ShowPost from "@/components/ShowPost";
-import ShowAudioTrack from "@/components/ShowAudioTrack";
-import ShowVideo from "@/components/ShowVideo";
-
-import { toast as SonnerToast } from "sonner";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { useForm } from "react-hook-form";
+import { toast as SonnerToast } from "sonner";
+
+import { User } from "@/types/user.types";
+import { useRouter } from "next/navigation";
+import { Post } from "@/types/post";
+
 import { uploadSchema } from "@/schemas/post.Schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUploadFile } from "@/hooks/use-upload-file";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+
+import SuggestedUser from "@/components/SuggestedUser";
+import ShowPost from "@/components/ShowPost";
+import ShowAudioTrack from "@/components/ShowAudioTrack";
+import ShowVideo from "@/components/ShowVideo";
 import {
   Dialog,
   DialogContent,
@@ -44,11 +41,12 @@ import { FileUploader } from "@/components/media/file-uploader";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Loader from "@/components/Loader";
 
 const page = () => {
   const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
   const [user, setUser] = useState<User>();
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     getUserDetails();
     getSuggestedUserPost();
@@ -58,32 +56,34 @@ const page = () => {
   const [Post, setPost] = useState<Post[]>([]);
   const getSuggestedUserPost = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get("/api/get-connected-user");
-      // console.log("Connected user Response", response);
       if (response.data.success) {
         setPost(response.data.data);
       } else {
-        console.log(response.data.message);
+        setErrorMsg(response.data.message);
       }
     } catch (error) {
-      // console.log("Error occured while fetching user follow content", error);
       setErrorMsg("Internal server error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   //get user details
   const getUserDetails = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get("/api/get-user");
-      // console.log("Response", response);
       if (response.data.success) {
         setUser(response.data.data);
       } else {
-        console.log(response.data.message);
+        setErrorMsg(response.data.message);
       }
     } catch (error) {
-      // console.log("Error occured while fetching user details", error);
       setErrorMsg("Internal server error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,12 +98,12 @@ const page = () => {
       type: "",
     },
   });
-  const { progresses, uploadedFiles, isUploading, onUpload } = useUploadFile(
-    "post",
-    { defaultUploadedFiles: [] }
-  );
+  const { progresses, isUploading, onUpload } = useUploadFile("post", {
+    defaultUploadedFiles: [],
+  });
   const [isSubmittingForm, setIsSubmittingForm] = useState(false);
   const router = useRouter();
+
   const onSubmit = (data: z.infer<typeof uploadSchema>) => {
     setIsSubmittingForm(true);
     SonnerToast.promise(
@@ -133,194 +133,177 @@ const page = () => {
       }
     );
   };
-  const customLoader = ({ src }: { src: string }) => src;
 
   return (
-    <div className="flex ">
-      <section className="w-full md:w-[62.5%] mt-6 ">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
-              <div className="flex items-center justify-between  w-full">
-                <Avatar>
-                  <AvatarImage src={user?.avatar} alt="@shadcn" />
-                  <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
-                  What's cooking?
-                </p>
-              </div>
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create Post</DialogTitle>
-            </DialogHeader>
-            <div className="w-full relative">
-              <div className="flex gap-3">
-                <Avatar>
-                  <AvatarImage src={user?.avatar} />
-                  <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <h2 className="font-semibold text-gray-700 flex items-center text-nowrap">
-                  {user?.name}
-                </h2>
-              </div>
+    <>
+      {isLoading && <Loader type="bar" size="lg" />}
+      {!isLoading && <div className="flex ">
+        <section className="w-full md:w-[62.5%] mt-6 ">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
+                <div className="flex items-center justify-between  w-full">
+                  <Avatar>
+                    <AvatarImage src={user?.avatar} alt="@shadcn" />
+                    <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <p className="bg-gray-100 h-10 w-full mx-2 flex items-center px-3 rounded-lg text-black">
+                    What's cooking?
+                  </p>
+                </div>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create Post</DialogTitle>
+              </DialogHeader>
+              <div className="w-full relative">
+                <div className="flex gap-3">
+                  <Avatar>
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <h2 className="font-semibold text-gray-700 flex items-center text-nowrap">
+                    {user?.name}
+                  </h2>
+                </div>
 
-              <Form {...form}>
-                <form
-                  method="post"
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className=" w-full text-black flex flex-col gap-2 "
-                >
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="mt-1 block text-sm md:text-xl font-medium text-gray-700">
-                          Description
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea
-                            rows={2}
-                            placeholder="Write description"
-                            {...field}
-                            className=" bg-slate-200 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="post"
-                    render={({ field }) => (
-                      <div className="space-y-6">
-                        <FormItem className="w-full">
-                          {/* <FormLabel className="text-base md:text-lg font-medium">
-                                
-                              </FormLabel> */}
-                          <FormControl>
-                            <FileUploader
-                              value={field.value}
-                              onValueChange={field.onChange}
-                              maxFileCount={1}
-                              maxSize={4 * 1024 * 1024}
-                              progresses={progresses}
-                              // pass the onUpload function here for direct upload
-                              //   onUpload={onUpload}
-                              disabled={isUploading || isSubmittingForm}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      </div>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="tag"
-                    render={({ field }) => (
-                      <div className="space-y-6">
-                        <FormItem className="w-full">
-                          <FormLabel className="text-base md:text-lg font-medium">
-                            Tag
+                <Form {...form}>
+                  <form
+                    method="post"
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className=" w-full text-black flex flex-col gap-2 "
+                  >
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="mt-1 block text-sm md:text-xl font-medium text-gray-700">
+                            Description
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Add tag"
+                            <Textarea
+                              rows={2}
+                              placeholder="Write description"
                               {...field}
                               className=" bg-slate-200 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
-                      </div>
-                    )}
-                  />
-
-                  <div className="flex justify-end">
-                    <Button
-                      type="submit"
-                      // disabled={isSubmittingForm}
-                      className="mt-4  text-white py-2 rounded-full font-medium  transition"
-                    >
-                      {isSubmittingForm ? (
-                        <>
-                          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-                          Please wait...
-                        </>
-                      ) : (
-                        " Post"
                       )}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </div>
-          </DialogContent>
-        </Dialog>
+                    />
 
-        <div className="mt-6">
-          {Post &&
-            Post.map((pt: any, index: number) => {
-              // console.log("Post :", pt);
-              if (pt.type.includes("image")) {
-                return (
-                  <ShowPost
-                    key={index}
-                    post={pt}
-                    name={pt.ownerDetails.name}
-                    isUser={false}
-                    isConnected={true}
-                    avatar={pt.ownerDetails.avatar}
-                  />
-                );
-              } else if (pt.type.includes("audio")) {
-                return (
-                  <ShowAudioTrack
-                    key={index}
-                    audio={pt}
-                    name={pt.ownerDetails.name}
-                    isUser={false}
-                    isConnected={true}
-                    avatar={pt.ownerDetails.avatar}
-                  />
-                );
-              } else {
-                return (
-                  <ShowVideo
-                    key={index}
-                    video={pt}
-                    name={pt.ownerDetails.name}
-                    isUser={false}
-                    isConnected={true}
-                    avatar={pt.ownerDetails.avatar}
-                  />
-                );
-              }
-            })}
-        </div>
+                    <FormField
+                      control={form.control}
+                      name="post"
+                      render={({ field }) => (
+                        <div className="space-y-6">
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <FileUploader
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                maxFileCount={1}
+                                maxSize={4 * 1024 * 1024}
+                                progresses={progresses}
+                                disabled={isUploading || isSubmittingForm}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </div>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="tag"
+                      render={({ field }) => (
+                        <div className="space-y-6">
+                          <FormItem className="w-full">
+                            <FormLabel className="text-base md:text-lg font-medium">
+                              Tag
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Add tag"
+                                {...field}
+                                className=" bg-slate-200 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </div>
+                      )}
+                    />
 
-        <div className="mt-10 text-center">
-          <p className="text-gray-600">
-            Upload your music so that musicians and artists can connect with you
-          </p>
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded mt-4 hover:bg-blue-700"
-          >
-            Get Started
-          </button>
+                    <div className="flex justify-end">
+                      <Button
+                        type="submit"
+                        className="mt-4  text-white py-2 rounded-full font-medium  transition"
+                      >
+                        {isSubmittingForm ? (
+                          <>
+                            <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                            Please wait...
+                          </>
+                        ) : (
+                          " Post"
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <div className="mt-6">
+            {Post &&
+              Post.map((pt: any, index: number) => {
+                if (pt.type.includes("image")) {
+                  return (
+                    <ShowPost
+                      key={index}
+                      post={pt}
+                      name={pt.ownerDetails.name}
+                      isUser={false}
+                      isConnected={true}
+                      avatar={pt.ownerDetails.avatar}
+                    />
+                  );
+                } else if (pt.type.includes("audio")) {
+                  return (
+                    <ShowAudioTrack
+                      key={index}
+                      audio={pt}
+                      name={pt.ownerDetails.name}
+                      isUser={false}
+                      isConnected={true}
+                      avatar={pt.ownerDetails.avatar}
+                    />
+                  );
+                } else {
+                  return (
+                    <ShowVideo
+                      key={index}
+                      video={pt}
+                      name={pt.ownerDetails.name}
+                      isUser={false}
+                      isConnected={true}
+                      avatar={pt.ownerDetails.avatar}
+                    />
+                  );
+                }
+              })}
+          </div>
+        </section>
+        <div className="w-full hidden md:block md:w-[24rem] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 h-screen sticky top-0 right-0">
+          <SuggestedUser />
         </div>
-      </section>
-      <div className="w-full hidden md:block md:w-[24rem] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 h-screen sticky top-0 right-0">
-        <SuggestedUser />
-      </div>
-    </div>
+      </div>}
+    </>
   );
 };
 

@@ -1,5 +1,21 @@
 "use client";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { z } from "zod";
+import { toast as SonnerToast } from "sonner";
+import { useForm } from "react-hook-form";
+import { Loader2, X } from "lucide-react";
+import { notFound, useParams, useRouter } from "next/navigation";
+
+import { toast } from "@/hooks/use-toast";
+import { setupSchema } from "@/schemas/user.Schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useUploadFile } from "@/hooks/use-upload-file";
+
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { AvatarUploader } from "@/components/media/file-avatar-uploader";
 import {
   Form,
   FormControl,
@@ -9,26 +25,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
-import { setupSchema, SignInSchema } from "@/schemas/user.Schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { Camera, Loader2, X } from "lucide-react";
-import { notFound, useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import Profile from "@/assets/architecture.jpg";
-import Image from "next/image";
-import { Textarea } from "@/components/ui/textarea";
-import { AvatarUploader } from "@/components/media/file-avatar-uploader";
-import { useUploadFile } from "@/hooks/use-upload-file";
-import { toast as SonnerToast } from "sonner";
+
 import { getErrorMessage } from "@/lib/handle-error";
 const page = () => {
-  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  const [isSubmittingForm, setIsSubmittingForm] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [successMsg, setSuccessMsg] = useState<string>("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
+
   const router = useRouter();
   const form = useForm<z.infer<typeof setupSchema>>({
     resolver: zodResolver(setupSchema),
@@ -48,19 +53,17 @@ const page = () => {
     },
   });
 
-  const [skills, setSkills] = useState<string[]>([]);
-  const [genres, setGenres] = useState<string[]>([]);
 
   //add skill
   const addSkill = (e: any) => {
     if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault(); // Prevent form submission on Enter
+      e.preventDefault();
       const input = e.currentTarget;
       const newSkill = input.value.trim();
       if (newSkill && !skills.includes(newSkill)) {
         setSkills([...skills, newSkill]);
       }
-      input.value = ""; // Clear the input field
+      input.value = "";
     }
   };
 
@@ -73,13 +76,13 @@ const page = () => {
   //add genres
   const addGenre = (e: any) => {
     if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault(); // Prevent form submission on Enter
+      e.preventDefault();
       const input = e.currentTarget;
       const newGenre = input.value.trim();
       if (newGenre && !genres.includes(newGenre)) {
         setGenres([...genres, newGenre]);
       }
-      input.value = ""; // Clear the input field
+      input.value = "";
     }
   };
 
@@ -93,11 +96,8 @@ const page = () => {
     "avatar",
     { defaultUploadedFiles: [] }
   );
-  useEffect(() => {
-    // console.log(form.getValues());
-    // console.log("Skills ", skills);
-    // console.log("G ", genres);
-  }, [form.watch()]);
+
+  useEffect(() => {}, [form.watch()]);
 
   useEffect(() => {
     form.setValue("genres", genres);
@@ -108,19 +108,17 @@ const page = () => {
   }, [skills]);
 
   const params = useParams<{ userId: string }>();
+
   useEffect(() => {
     if (!params?.userId) {
       notFound(); // Redirect to 404 page
     }
   }, [params]);
+  
   const onSubmit = (data: z.infer<typeof setupSchema>) => {
-    console.log("Submit form", data);
-    // console.log(form.formState.errors);
     setIsSubmittingForm(true);
-    console.log("Other data:", data);
     SonnerToast.promise(
       onUpload(data.avatar).then(async (dt) => {
-        console.log("DATA : ", data);
         if (data && dt && dt[0]?.url) {
           data.avatarURL = dt[0].url;
         }
@@ -153,7 +151,6 @@ const page = () => {
   };
   return (
     <div className="bg-auth-bg bg-cover bg-start min-h-screen text-white  flex justify-center flex-col items-center bg-opacity-50">
-      {/* <div className="flex items-center justify-center  px-1 sm:px-2 md:px-4"> */}
       <div className=" md:w-1/3 bg-white rounded-lg shadow-xl m-2 md:m-12 p-6 sm:p-8 w-full ">
         <h1 className="text-2xl font-bold  text-black">Set-up Profile</h1>
 
@@ -186,16 +183,11 @@ const page = () => {
                           maxFileCount={1}
                           maxSize={4 * 1024 * 1024}
                           progresses={progresses}
-                          // pass the onUpload function here for direct upload
-                          //   onUpload={onUpload}
                           disabled={isUploading || isSubmittingForm}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                    {/* {uploadedFiles.length > 0 ? (
-                  <UploadedFilesCard uploadedFiles={uploadedFiles} />
-                ) : null} */}
                   </div>
                 )}
               />
@@ -394,9 +386,6 @@ const page = () => {
                 name="instragram"
                 render={({ field }) => (
                   <FormItem>
-                    {/* <FormLabel className="block text-md md:text-xl font-medium">
-                      Instagram
-                    </FormLabel> */}
                     <FormControl>
                       <Input
                         placeholder="Instragram URL"
@@ -414,9 +403,6 @@ const page = () => {
                 name="twitter"
                 render={({ field }) => (
                   <FormItem>
-                    {/* <FormLabel className="block text-md md:text-xl font-medium">
-                      Twitter
-                    </FormLabel> */}
                     <FormControl>
                       <Input
                         placeholder="Twitter URL"
@@ -434,9 +420,6 @@ const page = () => {
                 name="linkdin"
                 render={({ field }) => (
                   <FormItem>
-                    {/* <FormLabel className="block text-md md:text-xl font-medium">
-                      Linkdin
-                    </FormLabel> */}
                     <FormControl>
                       <Input
                         placeholder="Linkdin URL"
@@ -454,9 +437,6 @@ const page = () => {
                 name="discord"
                 render={({ field }) => (
                   <FormItem>
-                    {/* <FormLabel className="block text-md md:text-xl font-medium">
-                      Discord
-                    </FormLabel> */}
                     <FormControl>
                       <Input
                         placeholder="Discord URL"
@@ -472,7 +452,6 @@ const page = () => {
             <div className="flex justify-end">
               <Button
                 type="submit"
-                // disabled={isSubmittingForm}
                 className="mt-4  text-white py-2 rounded-full font-medium  transition"
               >
                 {isSubmittingForm ? (

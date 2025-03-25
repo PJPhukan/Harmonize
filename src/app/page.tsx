@@ -1,8 +1,7 @@
 "use client";
 
-import Navber from "@/components/Navber";
-import { Button } from "@/components/ui/button";
 import { SquarePlay, SquarePlus, WandSparkles } from "lucide-react";
+import Navber from "@/components/Navber";
 import Link from "next/link";
 
 export default function Home() {
@@ -21,7 +20,6 @@ export default function Home() {
           corrupti laudantium reprehenderit quidem adipisci!
         </h3>
         <Link href="/sign-up">
-          {/* <Button> Get Started</Button> */}
           <button
             type="button"
             className="bg-gray-300 text-black px-5 py-2 mt-10 rounded-full text-xl"

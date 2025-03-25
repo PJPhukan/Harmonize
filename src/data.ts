@@ -1,5 +1,25 @@
-// Social Footer pages
+//user profile navber 
 
+export const profileNav = [
+    {
+        label: "Activity",
+        params: "activity"
+    },
+    {
+        label: "Tracks",
+        params: "tracks"
+    },
+    {
+        label: "Posts",
+        params: "post"
+    },
+    {
+        label: "Videos",
+        params: "video"
+    },
+]
+
+// Social Footer pages
 export const pages = [
     {
         label: "About ·",

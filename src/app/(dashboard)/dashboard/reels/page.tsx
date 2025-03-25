@@ -1,12 +1,14 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { Download, Heart, Share2 } from "lucide-react";
 import { Types } from "mongoose";
 import Link from "next/link";
-import React, { useEffect, useState, useRef } from "react";
+import { Download, Heart, Share2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Loader from "@/components/Loader";
 
 interface Video {
   _id: Types.ObjectId;
@@ -36,10 +38,8 @@ const Page = () => {
       setisLoading(true);
       const response = await axios.get("/api/get-reels");
 
-      console.log("REELS RESPONSE :", response);
       setVideos(response.data.data);
     } catch (error) {
-      console.log("Error while fetching reels", error);
     } finally {
       setisLoading(false);
     }
@@ -61,7 +61,7 @@ const Page = () => {
           }
         });
       },
-      { threshold: 0.6 } // Video should be at least 60% visible to play
+      { threshold: 0.6 }
     );
 
     videoRefs.current.forEach((video) => {
@@ -114,75 +114,80 @@ const Page = () => {
     }
   };
   return (
-    <div className="bg-black text-white m-0 min-h-screen py-3 flex justify-center items-center ">
-      <div className="flex flex-col gap-3 justify-center items-center">
-        {videos.map((video, index) => (
-          <div
-            key={video._id.toString()}
-            className="h-screen w-auto relative rounded-lg overflow-hidden"
-          >
-            <video
-              ref={(el) => {
-                videoRefs.current[index] = el;
-              }}
-              muted
-              loop
-              src={video.url}
-              className="w-full h-screen  rounded-md"
-            />
-            <div className="flex absolute right-1 flex-col bottom-[50px] gap-5 text-black justify-center items-center">
-              <span className="flex items-center flex-col cursor-pointer">
-                <Heart className="" />
-                12.1k
-              </span>
-              <span
-                className="cursor-pointer"
-                onClick={() => handleShare(video.url)}
+    <>
+      {isLoading && <Loader type="bar" size="lg" />}
+      {!isLoading && (
+        <div className="bg-black text-white m-0 min-h-screen py-3 flex justify-center items-center ">
+          <div className="flex flex-col gap-3 justify-center items-center">
+            {videos.map((video, index) => (
+              <div
+                key={video._id.toString()}
+                className="h-screen w-auto relative rounded-lg overflow-hidden"
               >
-                <Share2 />
-              </span>
-              <span
-                className="cursor-pointer"
-                onClick={() => handleDownload(video.url, video.name)}
-              >
-                <Download />
-              </span>
-            </div>
-            <div className=" absolute bottom-7 left-3 text-black">
-              <div className="flex justify-start gap-2 items-center">
-                <Link
-                  href={`/dashboard/profile/${video.ownerDetails._id}`}
-                  className="flex items-center gap-2"
-                >
-                  <Avatar className="h-[30px] w-[30px]">
-                    <AvatarImage
-                      src={video.ownerDetails?.avatar}
-                      alt={video.ownerDetails?.name}
-                    />
-                    <AvatarFallback>
-                      {video.ownerDetails?.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span>{video.ownerDetails?.name}</span>
-                </Link>
-                <span className=" font-semibold text-black flex items-center bg-transparent cursor-pointer">
-                  {video.isConnected ? (
-                    <span className="border-2 px-3 py-1 rounded-sm">
-                      Disconnect
+                <video
+                  ref={(el) => {
+                    videoRefs.current[index] = el;
+                  }}
+                  muted
+                  loop
+                  src={video.url}
+                  className="w-full h-screen  rounded-md"
+                />
+                <div className="flex absolute right-1 flex-col bottom-[50px] gap-5 text-black justify-center items-center">
+                  <span className="flex items-center flex-col cursor-pointer">
+                    <Heart className="" />
+                    12.1k
+                  </span>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => handleShare(video.url)}
+                  >
+                    <Share2 />
+                  </span>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => handleDownload(video.url, video.name)}
+                  >
+                    <Download />
+                  </span>
+                </div>
+                <div className=" absolute bottom-7 left-3 text-black">
+                  <div className="flex justify-start gap-2 items-center">
+                    <Link
+                      href={`/dashboard/profile/${video.ownerDetails._id}`}
+                      className="flex items-center gap-2"
+                    >
+                      <Avatar className="h-[30px] w-[30px]">
+                        <AvatarImage
+                          src={video.ownerDetails?.avatar}
+                          alt={video.ownerDetails?.name}
+                        />
+                        <AvatarFallback>
+                          {video.ownerDetails?.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span>{video.ownerDetails?.name}</span>
+                    </Link>
+                    <span className=" font-semibold text-black flex items-center bg-transparent cursor-pointer">
+                      {video.isConnected ? (
+                        <span className="border-2 px-3 py-1 rounded-sm">
+                          Disconnect
+                        </span>
+                      ) : (
+                        <span className="border-2 px-3 py-1 rounded-sm ">
+                          Connect
+                        </span>
+                      )}
                     </span>
-                  ) : (
-                    <span className="border-2 px-3 py-1 rounded-sm ">
-                      Connect
-                    </span>
-                  )}
-                </span>
+                  </div>
+                  <span className="ellipsis">{video.description}</span>
+                </div>
               </div>
-              <span className="ellipsis">{video.description}</span>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

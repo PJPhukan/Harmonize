@@ -18,7 +18,7 @@ export default function RootLayout({
           <div className="fixed flex w-full md:hidden z-[9999] top-0 left-0  ">
             <Topbar />
           </div>
-          <div className="px-[5px]">{children}</div>
+          <div className="px-[0px]">{children}</div>
           <div className="fixed flex w-full md:hidden z-[9999] bottom-[-1px] left-0  ">
             <MobileNavber />
           </div>

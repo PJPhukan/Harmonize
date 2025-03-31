@@ -128,7 +128,7 @@ export function AvatarUploader(props: FileUploaderProps) {
         ></Image>
         <label
           htmlFor="avatar"
-          className="z-20 text-xl rounded-full absolute  bottom-1.5 right-1 h-[35px] w-[35px]"
+          className="z-20 text-xl rounded-full absolute  bottom-1.5 right-0 h-[35px] w-[35px]"
         >
           <Camera
             className="z-20 text-xl text-white p-1 rounded-full bg-gray-500 "
@@ -149,7 +149,6 @@ export function AvatarUploader(props: FileUploaderProps) {
           id="avatar"
         />
       </div>
-          
     </div>
   );
 }

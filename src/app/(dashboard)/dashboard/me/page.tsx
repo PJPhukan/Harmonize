@@ -205,7 +205,7 @@ const page = () => {
                     <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <Link
-                    href="/dashboard/me/edit"
+                    href="/dashboard/settings"
                     className="flex gap-1 bg-gray-600 text-white px-3 py-1.5 rounded-full "
                   >
                     <Edit2 width={20} />
@@ -217,13 +217,13 @@ const page = () => {
                 <div className="flex flex-col gap-1 items-center md:items-start">
                   <p className="text-2xl font-bold">{user.name}</p>
                   {/* skills */}
-                  <div className="w-full mt-2">
-                    <div className="flex gap-1.5 items-center md:items-start">
+                  <div className=" mt-2">
+                    <div className="flex gap-1.5 items-center md:items-start flex-wrap">
                       {user.skill.length > 0 &&
                         user.skill.map((sk, i) => (
                           <span
                             key={sk}
-                            className=" text-sm px-3 bg-white py-1 rounded-full "
+                            className="text-sm px-3 bg-white/70 py-1 rounded-full "
                           >
                             {sk}
                           </span>
@@ -231,13 +231,13 @@ const page = () => {
                     </div>
                   </div>
                   {/* gonre */}
-                  <div className="w-full mt-1">
-                    <div className="flex gap-1.5 ">
+                  <div className=" mt-1">
+                    <div className="flex gap-1.5 items-center md:items-start flex-wrap ">
                       {user.genres.length > 0 &&
                         user.genres.map((gn, i) => (
                           <span
                             key={i}
-                            className="text-sm px-3 bg-white py-1 rounded-full "
+                            className="text-sm px-3 bg-white/70 py-1 rounded-full "
                           >
                             {gn}
                           </span>
@@ -253,14 +253,14 @@ const page = () => {
                 {mediaDetails.map((media) => (
                   <div
                     key={media.label}
-                    className="flex flex-col justify-center items-center font-extrabold w-1/3 md:w-1/4 bg-white rounded-md  h-20 md:h-28 relative shadow-md inset-2"
+                    className="flex flex-col justify-center items-center font-extrabold min:w-1/3 md:min-w-1/4 bg-white rounded-md  h-20 md:h-28 relative shadow-md inset-2 px-2"
                   >
                     <p className="text-3xl md:text-5xl number-font">
                       {media.total > 999
                         ? `${(media.total / 1000).toFixed(1)}K`
                         : media.total}
                     </p>
-                    <p className="">{media.label}</p>
+                    <p className="text-nowrap">{media.label}</p>
                     <span className="absolute w-full h-full opacity-10 flex justify-center items-center">
                       <media.icon className="w-full h-full" />
                     </span>

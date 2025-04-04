@@ -81,13 +81,13 @@ const UpdateSkill = ({ user }: { user: User }) => {
           Click on the skills you have. Selected skills will be highlighted.
         </DialogDescription>
       </DialogHeader>
-      <div className="grid gap-4 py-4">
-        <div className="flex flex-wrap gap-2">
+      <div className="grid gap-2 md:gap-4 py-2 md:py-4">
+      <div className="flex flex-wrap gap-1 md:gap-2">
           {skillsList.map((skill) => (
             <button
               key={skill}
               onClick={() => toggleSkill(skill)}
-              className={`px-4 py-2 border rounded-full text-sm font-medium transition-all ${
+              className={`px-3 py-1 md:py-2 border rounded-full text-sm font-medium transition-all ${
                 selectedSkills.includes(skill)
                   ? "bg-indigo-500 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -97,7 +97,7 @@ const UpdateSkill = ({ user }: { user: User }) => {
             </button>
           ))}
         </div>
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-1 md:mt-4">
           <Input
             type="text"
             placeholder="Add a new skill"
@@ -107,12 +107,12 @@ const UpdateSkill = ({ user }: { user: User }) => {
           />
           <Button
             onClick={addNewSkill}
-            className="text-white py-2 rounded-full font-medium transition"
+             className="text-white py-1 md:py-2 rounded-full font-medium transition"
           >
             Add
           </Button>
         </div>
-        <div className="flex w-full justify-center mt-4">
+        <div className="flex w-full justify-center mt-2 md:mt-4">
           <Button
             onClick={UpdateSkill}
             className=" text-white py-2 rounded-full font-medium  transition"

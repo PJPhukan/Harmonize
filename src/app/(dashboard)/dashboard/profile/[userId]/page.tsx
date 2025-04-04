@@ -154,13 +154,13 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
 
                 <div className="flex flex-col gap-1 items-center md:items-start">
                   <p className="text-2xl font-bold">{user.name}</p>
-                  <div className="w-full mt-2">
-                    <div className="flex gap-1.5 items-center md:items-start">
+                  <div className="mt-2">
+                    <div className="flex gap-1.5 items-center md:items-start flex-wrap">
                       {user.skill.length > 0 &&
                         user.skill.map((sk, i) => (
                           <span
                             key={sk}
-                            className=" text-sm px-3 bg-white py-1 rounded-full "
+                            className=" text-sm px-3 bg-white/70 py-1 rounded-full "
                           >
                             {sk}
                           </span>
@@ -168,13 +168,13 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
                     </div>
                   </div>
                   {/* gonre */}
-                  <div className="w-full mt-1">
-                    <div className="flex gap-1.5 ">
+                  <div className="mt-1">
+                    <div className="flex gap-1.5 items-center md:items-start flex-wrap">
                       {user.genres.length > 0 &&
                         user.genres.map((gn, i) => (
                           <span
                             key={i}
-                            className="text-sm px-3 bg-white py-1 rounded-full "
+                            className="text-sm px-3 bg-white/70 py-1 rounded-full "
                           >
                             {gn}
                           </span>
@@ -190,7 +190,7 @@ const UserProfile = ({ isUser = false }: { isUser: boolean }) => {
                 {mediaDetails.map((media) => (
                   <div
                     key={media.label}
-                    className="flex flex-col justify-center items-center font-extrabold w-1/3 md:w-1/4 bg-white rounded-md  h-20 md:h-28 relative shadow-md inset-2"
+                    className="flex flex-col justify-center items-center font-extrabold min:w-1/3 md:min-w-1/4 bg-white rounded-md  h-20 md:h-28 relative shadow-md inset-2 px-2"
                   >
                     <p className="text-3xl md:text-5xl number-font">
                       {media.total > 999

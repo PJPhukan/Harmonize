@@ -13,7 +13,7 @@ const Topbar = () => {
   const toggleSearchBar = () => setSearchOpen((prev) => !prev);
 
   return (
-    <div className="w-[100vw] md:w-[95vw] lg:w-[90vw] border-b-2 m-auto flex justify-between bg-white px-3 h-20">
+    <div className="w-[100vw] md:w-[95vw] lg:w-[90vw] border-b-2 m-auto flex justify-between bg-white px-3 h-18">
       {/* left protion  */}
       <div className="flex items-center gap-0 ">
         <Image src={Logo} alt="H" height={70} className="" />

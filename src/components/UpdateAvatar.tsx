@@ -74,7 +74,7 @@ const UpdateAvatar = ({ user }: { user: User }) => {
     defaultUploadedFiles: [],
   });
   return (
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px] px-3">
       <DialogHeader>
         <DialogTitle>Update your Profile Picture </DialogTitle>
         <DialogDescription>

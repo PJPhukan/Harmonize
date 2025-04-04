@@ -6,7 +6,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
-import { Asterisk,  Link as LinkIcon, PencilIcon } from "lucide-react";
+import { Asterisk, Link as LinkIcon, PencilIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
@@ -42,8 +42,6 @@ const SettingsPage = () => {
     { id: "updates", label: "Updates" },
     { id: "delete", label: "Delete account" },
   ];
-
-
 
   const getUserDetails = async () => {
     try {
@@ -114,7 +112,7 @@ const SettingsPage = () => {
     });
     console.log("Privacy Data :", data);
   }
- 
+
   useEffect(() => {
     getUserDetails();
   }, []);
@@ -142,8 +140,7 @@ const SettingsPage = () => {
     return date.toLocaleString("en-US", options).replace(",", " at");
   }
 
-
-  const deleteAccount=async()=>{
+  const deleteAccount = async () => {
     try {
       if (
         window.confirm(
@@ -153,39 +150,35 @@ const SettingsPage = () => {
         console.log("Account deleted");
         toast({
           title: "Account Deleted",
-          description:
-            "Your account has been successfully deleted.",
+          description: "Your account has been successfully deleted.",
         });
       }
-    } catch (error) {
-      
-    }
-  }
+    } catch (error) {}
+  };
   return (
     <>
       {isLoading && <Loader type="bar" size="lg" />}
 
       {user && !isLoading && (
         <div className="h-screen bg-white text-black relative ">
-          <h2 className="text-xl font-bold mb-4 p-3 sticky top-0 left-0 bg-white z-50 h-[60px] ml-48">
+          <h2 className="hidden md:block text-base md:text-xl font-bold mb:mb-4 p-3 sticky top-16 md:top-0 left-0 bg-white z-50 h-auto md:h-[60px] md:ml-48">
             Settings &gt;
-            <span className="text-gray-500 text-base">
+            <span className="text-gray-500 text-sm md:text-base">
               {" "}
               {selectedTab.charAt(0).toUpperCase() + selectedTab.slice(1)}
             </span>
             <hr className="mt-5" />
           </h2>
-          <div className="flex ">
-            {/* Sidebar Navigation */}
-            <aside className="w-48 px-3 sticky top-0 self-start  h-[calc(100vh-60px)] bg-white">
-              <nav>
+          <div className="flex flex-col md:flex-row ">
+            <aside className="hide-scrollbar w-[100vw] py-2 md:pt-0 overflow-x-scroll md:w-48 px-3 flex md:block sticky top-16 self-start md:h-[calc(100vh-60px)] bg-white z-50 ">
+              <nav className="flex md:block gap-1 mt-1">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
-                    className={`block w-full text-left px-2 py-2 rounded font-medium ${
+                    className={`block w-full text-left px-2 py-2 rounded font-medium text-nowrap ${
                       selectedTab === tab.id
                         ? "bg-gray-200 text-blue-900"
-                        : "hover:bg-gray-100"
+                        : "bg-gray-100 md:bg-transparent md:hover:bg-gray-100"
                     }`}
                     type="button"
                     onClick={() => setSelectedTab(tab.id)}
@@ -196,12 +189,12 @@ const SettingsPage = () => {
               </nav>
             </aside>
 
-            <main className="flex-1 px-6 overflow-y-auto z-20">
+            <main className="flex-1 px-2 md:px-6 overflow-y-auto z-20 mt-16 md:mt-0">
               {/* Account Panel */}
               {selectedTab === "account" && (
                 <div>
                   <h3 className="text-lg font-semibold mb-6">My Profile</h3>
-                  <div className="border rounded-lg overflow-auto px-7 py-3 flex w-full justify-between mb-5">
+                  <div className="border rounded-lg overflow-auto px-2 md:px-7 py-2 md:py-3 flex w-full justify-between mb-5">
                     <div className="flex gap-2 items-center">
                       <Avatar className="h-10 w-10 md:h-16 md:w-16">
                         <AvatarImage
@@ -226,7 +219,7 @@ const SettingsPage = () => {
                       <UpdateAvatar user={user} />
                     </Dialog>
                   </div>
-                  <div className="border rounded-lg overflow-auto px-7 py-3 w-full  mb-5">
+                  <div className="border rounded-lg overflow-auto px-2 md:px-7 py-2  w-full  mb-5">
                     <div className="flex justify-between w-full mb-4">
                       <h5 className="font-semibold text-lg">
                         Personal Information
@@ -272,7 +265,7 @@ const SettingsPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="border rounded-lg overflow-auto px-7 py-3 w-full  mb-5">
+                  <div className="border rounded-lg overflow-auto px-2 md:px-7 py-2 w-full  mb-5">
                     <div className="flex justify-between w-full mb-4">
                       <h5 className="font-semibold text-lg">Manage Password</h5>
                       <Dialog>
@@ -294,7 +287,7 @@ const SettingsPage = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="border rounded-lg overflow-auto px-7 py-3 w-full  mb-5">
+                  <div className="border rounded-lg overflow-auto px-2 md:px-7 py-2 w-full  mb-5">
                     <div className="flex justify-between w-full mb-4">
                       <h5 className="font-semibold text-lg">Your Skills</h5>
                       <Dialog>
@@ -312,7 +305,7 @@ const SettingsPage = () => {
                         user.skill.map((skill) => (
                           <p
                             key={skill}
-                            className="text-black/60 font-medium border-2 shadow-none px-3 py-2 text-nowrap rounded-lg"
+                            className="text-black/60 text-sm font-medium border md:border-2 shadow-none px-3 py-1 md:py-2 text-nowrap rounded-md md:rounded-lg"
                           >
                             {skill}
                           </p>
@@ -324,7 +317,7 @@ const SettingsPage = () => {
                       )}
                     </div>
                   </div>
-                  <div className="border rounded-lg overflow-auto px-7 py-3 w-full  mb-5">
+                  <div className="border rounded-lg overflow-auto px-2 md:px-7 py-2 w-full  mb-5">
                     <div className="flex justify-between w-full mb-4">
                       <h5 className="font-semibold text-lg">Your Genres</h5>
                       <Dialog>
@@ -342,7 +335,7 @@ const SettingsPage = () => {
                         user.genres.map((genre) => (
                           <p
                             key={genre}
-                            className="text-black/60 font-medium border-2 shadow-none px-3 py-2 text-nowrap rounded-lg"
+                            className="text-black/60 text-sm font-medium border md:border-2 shadow-none px-3 py-1 md:py-2 text-nowrap rounded-md md:rounded-lg"
                           >
                             {genre}
                           </p>
@@ -354,7 +347,7 @@ const SettingsPage = () => {
                       )}
                     </div>
                   </div>
-                  <div className="border rounded-lg overflow-auto px-7 py-3 w-full  mb-5">
+                  <div className="border rounded-lg overflow-auto px-2 md:px-7 py-2 w-full  mb-5">
                     <div className="flex justify-between w-full mb-4">
                       <h5 className="font-semibold text-lg">Social Profiles</h5>
                       <Dialog>

@@ -81,20 +81,20 @@ const UpdateGenre = ({ user }: { user: User }) => {
     }
   };
   return (
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px] overflow-x-scroll">
       <DialogHeader>
         <DialogTitle>Select Your Favorite Genres</DialogTitle>
         <DialogDescription>
           Click on the genres you like. Selected genres will be highlighted.
         </DialogDescription>
       </DialogHeader>
-      <div className="grid gap-4 py-4">
-        <div className="flex flex-wrap gap-2">
+      <div className="grid gap-2 md:gap-4 py-2 md:py-4">
+        <div className="flex flex-wrap gap-1 md:gap-2">
           {genresList.map((genre) => (
             <button
               key={genre}
               onClick={() => toggleGenre(genre)}
-              className={`px-4 py-2 border rounded-full text-sm font-medium transition-all ${
+              className={`px-3 py-1 md:py-2 border rounded-full text-sm font-medium transition-all ${
                 selectedGenres.includes(genre)
                   ? "bg-indigo-500 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -104,7 +104,7 @@ const UpdateGenre = ({ user }: { user: User }) => {
             </button>
           ))}
         </div>
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-1 md:mt-4">
           <Input
             type="text"
             placeholder="Add a new genre"
@@ -114,12 +114,12 @@ const UpdateGenre = ({ user }: { user: User }) => {
           />
           <Button
             onClick={addNewGenre}
-            className="text-white py-2 rounded-full font-medium transition"
+            className="text-white py-1 md:py-2 rounded-full font-medium transition"
           >
             Add
           </Button>
         </div>
-        <div className="flex w-full justify-center mt-4">
+        <div className="flex w-full justify-center mt-2 md:mt-4">
           <Button
             onClick={UpdateGenres}
             className=" text-white py-2 rounded-full font-medium  transition"

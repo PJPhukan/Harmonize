@@ -50,7 +50,7 @@ const SuggestedUser = () => {
 
   return (
     // TODO: Check on responsive time
-    <div className="flex space-y-4 py-4 flex-col h-screen sticky top-0 right-0">
+    <div className="hidden lg:flex space-y-4 py-4 flex-col h-screen sticky top-0 right-0">
       <div className="px-7 py-5 flex-1 flex justify-between flex-col w-full pt-0">
         <div>
           <div className="flex items-center justify-between mb-4">

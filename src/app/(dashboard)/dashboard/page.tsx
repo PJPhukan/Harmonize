@@ -138,7 +138,7 @@ const page = () => {
       {isLoading && <Loader type="bar" size="lg" />}
       {!isLoading && (
         <div className="flex ">
-          <section className="w-full md:w-[62.5%] mt-6 ">
+          <section className="w-full lg:w-[62.5%] mt-2  ">
             <Dialog>
               <DialogTrigger asChild>
                 <Button className="w-full border-none hover:bg-transparent bg-transparent shadow-none">
@@ -303,7 +303,7 @@ const page = () => {
                 })}
             </div>
           </section>
-          <div className="w-full hidden md:block md:w-[24rem] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 h-screen sticky top-0 right-0">
+          <div className="w-full hidden lg:block lg:w-[24rem] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 h-screen sticky top-0 right-0">
             <SuggestedUser />
           </div>
         </div>

@@ -101,7 +101,7 @@ const SidebarNavbar = () => {
   ];
   return (
     <div className="flex space-y-0 py-4 flex-col h-full bg-[#111827] text-white z-40 ">
-      <div className="px-7 py-5 flex-1">
+      <div className=" px-5 lg:px-7 py-5 flex-1">
         <Link href="/dashboard" className="flex items-center pl-3 mb-14">
           <div className="relative h-11 w-14 mr-2">
             <Image fill alt="Logo" src="/logo.png" />

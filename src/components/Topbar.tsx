@@ -6,17 +6,37 @@ import Logo from "@/assets/logo2.png";
 import User from "@/assets/userAvatar.jpg";
 import { Bell, MessageCircle, Search } from "lucide-react";
 import SlidingSearchBar from "./SlidingSearchBar";
+import SlidingNotificationsPanel from "./SlidingNotificationsPanel";
 
 const Topbar = () => {
   const [isSearchOpen, setSearchOpen] = useState(false);
 
-  const toggleSearchBar = () => setSearchOpen((prev) => !prev);
+  const [isNotificationsOpen, setNotificationsOpen] = useState(false);
 
+  const toggleSearchBar = () => setSearchOpen((prev) => !prev);
+  const toggleNotificationBar = () => setNotificationsOpen((prev) => !prev);
+  const openChat = () => {
+    console.log("OPENING CHAT");
+  };
+  const navItem = [
+    {
+      icon: Search,
+      func: toggleSearchBar,
+    },
+    {
+      icon: Bell,
+      func: toggleNotificationBar,
+    },
+    {
+      icon: MessageCircle,
+      func: openChat,
+    },
+  ];
   return (
     <div className="w-[100vw] md:w-[95vw] lg:w-[90vw] border-b-2 m-auto flex justify-between bg-white px-3 h-18">
       {/* left protion  */}
       <div className="flex items-center gap-0 ">
-        <Image src={Logo} alt="H" height={70} className="" />
+        <Image src={Logo} alt="H" height={60} className="" />
         <p className="text-2xl font-bold hidden md:block">Harmonize</p>
       </div>
       {/* search bar section  */}
@@ -37,27 +57,26 @@ const Topbar = () => {
 
       {/* right section  */}
       <div className="flex items-center gap-4">
-        <Search
-          width={30}
-          className="h-[30px] cursor-pointer hover:translate-y-[-2px] transition-all duration-500 hover:scale-110 text-gray-500 block md:hidden "
-          onClick={toggleSearchBar}
-        />
-        <Bell
-          width={30}
-          className="h-[30px] cursor-pointer hover:translate-y-[-2px] transition-all duration-500 hover:scale-110 text-gray-500"
-        />
-        <MessageCircle
-          width={30}
-          className="h-[30px] cursor-pointer hover:translate-y-[-2px] transition-all duration-500 hover:scale-110 text-gray-500"
-        />
+        {navItem.map((item, i) => (
+          <item.icon
+            width={20}
+            className="h-[30px] cursor-pointer  transition-all duration-500  text-gray-500 block md:hidden "
+            onClick={item.func}
+            key={i}
+          />
+        ))}
 
         <Image
           src={User}
           alt="You"
-          className="rounded-full w-[60px] h-[60px]"
+          className="rounded-full w-[50px] h-[50px]"
         />
       </div>
       <SlidingSearchBar isOpen={isSearchOpen} onClose={toggleSearchBar} />
+      <SlidingNotificationsPanel
+        isOpen={isNotificationsOpen}
+        onClose={toggleNotificationBar}
+      />
     </div>
   );
 };

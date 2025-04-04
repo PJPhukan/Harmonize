@@ -35,14 +35,14 @@ const routes = [
   },
 
   {
-    label: "Me",
+    label: "Settings",
     icon: SettingsIcon,
     url: "/dashboard/settings",
   },
 ];
 const MobileNavber = () => {
   return (
-    <div className="flex bg-[#111827]  w-full text-white h-[80px]">
+    <div className="flex bg-[#111827] w-full text-white h-[70px]">
       <div className=" flex-1">
         <div className="space-y-1 flex ">
           {routes.map((route) => {

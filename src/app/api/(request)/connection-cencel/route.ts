@@ -9,6 +9,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         // Decode the token from the request (to get the user ID)
         const tokenId = decodeToken(request);
 
+        const user = await UserModel.findById(tokenId);
         // Check if the user is authenticated
         if (!tokenId) {
             return NextResponse.json({
@@ -17,21 +18,6 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
                 statusCode: 401,
             });
         }
-
-        const { requesteeId } = await request.json(); // Get the user ID of the requestee
-
-        // Find the connection request from the user
-        const connection = await ConnectionModel.findOne({
-            requester: tokenId,
-            requestee: requesteeId,
-        });
-
-        const notificationMessage = await NotificationModel.findOne({
-            owner: requesteeId,
-            requester: tokenId,
-        });
-
-        const user = await UserModel.findById(tokenId)
         if (!user) {
             return NextResponse.json({
                 success: false,
@@ -39,6 +25,14 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
                 statusCode: 404,
             });
         }
+        const { requesterId } = await request.json(); // Get the user ID of the requester
+        console.log("Requester ID :", requesterId)
+        // Find the connection request from the requester
+        const connection = await ConnectionModel.findOne({
+            requester: requesterId,
+            requestee: tokenId,
+        });
+
         if (!connection) {
             return NextResponse.json({
                 success: false,
@@ -46,22 +40,31 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
                 statusCode: 404,
             });
         }
+        await NotificationModel.findOneAndDelete({ owner: tokenId })
 
-        // Delete the connection request
-        await connection.deleteOne();
-        await notificationMessage?.deleteOne();
+        if (connection.isAccept) {
+            return NextResponse.json({
+                success: false,
+                message: "Connection request already accepted.",
+                statusCode: 400,
+            });
+        }
+
+        // Update the connection to accepted
+        await connection.deleteOne()
+
         
 
         return NextResponse.json({
             success: true,
-            message: "Connection request canceled successfully.",
+            message: "Connection request reject successfully.",
             statusCode: 200,
         });
     } catch (error) {
-        console.error("Error canceling connection request: ", error);
+        console.error("Error rejecting connection request: ", error);
         return NextResponse.json({
             success: false,
-            message: "Failed to cancel connection request.",
+            message: "Failed to reject connection request.",
             statusCode: 500,
         });
     }

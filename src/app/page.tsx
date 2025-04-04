@@ -3,6 +3,7 @@
 import { SquarePlay, SquarePlus, WandSparkles } from "lucide-react";
 import Navber from "@/components/Navber";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -42,6 +43,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }

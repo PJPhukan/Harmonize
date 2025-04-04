@@ -74,7 +74,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             },
         ]);
 
-        console.log("SUGGESTED USER DETAILS :", suggestedUsers);
+        // console.log("SUGGESTED USER DETAILS :", suggestedUsers);
 
         return NextResponse.json({
             success: true,

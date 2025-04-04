@@ -1,22 +1,26 @@
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Types } from "mongoose";
 import dummyImg from "@/assets/architecture.jpg";
 const PostOwner = ({
   name,
   avatar,
   isUser,
   isConnected,
+  id,
 }: {
   name: string;
   avatar: string;
   isUser: Boolean;
   isConnected: Boolean;
+  id?: Types.ObjectId;
 }) => {
   const customLoader = ({ src }: { src: string }) => src;
 
   return (
     <div className="flex h-full justify-between items-center gap-3  md:flex-row  ">
-      <div className="flex gap-3">
+      <Link href={`/dashboard/profile/${id}`} className="flex gap-3">
         <Image
           loader={customLoader}
           src={avatar ? avatar : dummyImg}
@@ -28,7 +32,7 @@ const PostOwner = ({
         <h2 className="font-semibold text-gray-700 flex items-center text-nowrap">
           {name}
         </h2>
-      </div>
+      </Link>
       {!isUser && (
         <span className=" font-semibold text-white flex items-center cursor-pointer">
           {isConnected ? (

@@ -1,8 +1,7 @@
 "use client";
-import Image from "next/image";
 import React from "react";
-import dummyImg from "@/assets/architecture.jpg";
-import { Button } from "./ui/button";
+import Image from "next/image";
+import { Types } from "mongoose";
 import { IoMdHeart } from "react-icons/io";
 import { IoMdHeartEmpty } from "react-icons/io";
 import PostOwner from "./postOwner";
@@ -12,12 +11,14 @@ const ShowPost = ({
   name,
   avatar,
   isConnected = false,
+  id,
 }: {
   post: any;
   isUser: boolean;
   name: string;
   avatar: string;
   isConnected?: boolean;
+  id?: Types.ObjectId;
 }) => {
   const customLoader = ({ src }: { src: string }) => src;
   return (
@@ -27,6 +28,7 @@ const ShowPost = ({
         avatar={avatar}
         isUser={isUser}
         isConnected={isConnected}
+        id={id}
       />
       <Image
         loader={customLoader}
@@ -35,7 +37,6 @@ const ShowPost = ({
         className="mt-2 w-full h-full rounded-md max-h-[20rem]"
         width={200}
         height={400}
-        // className="rounded-md"
       />
 
       <div className="flex gap-2 cursor-pointer ">

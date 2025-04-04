@@ -27,7 +27,6 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         }
         const { requesterId } = await request.json(); // Get the user ID of the requester
         console.log("Requester ID :", requesterId)
-        // Find the connection request from the requester
         const connection = await ConnectionModel.findOne({
             requester: requesterId,
             requestee: tokenId,
@@ -51,7 +50,8 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 
         // Update the connection to accepted
         connection.isAccept = true;
-        await connection.save();
+        const connectionResponse = await connection.save();
+
 
         // Create a notification for the requester
         const notification = new NotificationModel({
@@ -62,6 +62,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         });
 
         await notification.save();
+        if (connectionResponse.isAccept) {
+            await NotificationModel.findOneAndDelete({ owner: tokenId })
+        }
 
         return NextResponse.json({
             success: true,

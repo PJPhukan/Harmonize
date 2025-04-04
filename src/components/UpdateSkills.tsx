@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -9,31 +9,46 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { User } from "@/types/user.types";
 
 const initialSkillsList = [
-  "JavaScript",
-  "React",
-  "Next.js",
-  "Node.js",
-  "TypeScript",
-  "GraphQL",
-  "Tailwind CSS",
-  "Redux",
-  "Express.js",
+  "Playing an instrument",
+  "Singing/vocal training",
+  "Music theory",
+  "Songwriting",
+  "Music production",
+  "Mixing and mastering",
+  "Beat-making",
+  "DJing",
+  "Ear training",
+  "Improvisation",
+  "Reading sheet music",
+  "Composing",
+  "Lyric writing",
+  "Performing live",
+  "Recording techniques"
 ];
 
-const UpdateSkill = () => {
+const UpdateSkill = ({ user }: { user: User }) => {
+  console.log(user.skill);
   const [skillsList, setSkillsList] = useState<string[]>(initialSkillsList);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(user.skill);
   const [newSkill, setNewSkill] = useState<string>("");
+  const [isSubmittingForm, setIsSubmittingForm] = useState<boolean>(false);
 
+  const router = useRouter();
   const toggleSkill = (skill: string) => {
     setSelectedSkills((prev) =>
-      prev.includes(skill)
-        ? prev.filter((s) => s !== skill)
-        : [...prev, skill]
+      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
     );
   };
+
+  useEffect(() => {
+    setSkillsList((prev) => Array.from(new Set([...prev, ...user.skill])));
+  }, [user.skill]);
 
   const addNewSkill = () => {
     if (newSkill && !skillsList.includes(newSkill)) {
@@ -42,6 +57,22 @@ const UpdateSkill = () => {
     }
   };
 
+  const UpdateSkill = async () => {
+    try {
+      setIsSubmittingForm(true);
+      const response = await axios.post("/api/update/skill", {
+        skills: selectedSkills,
+      });
+      console.log("UPDATE SKILL RESPONSE :", response);
+      if (response.data.status) {
+        router.replace(`/dashboard/settings`);
+      }
+    } catch (error) {
+      console.log("ERROR [UPDATE PASSWORD ] ", error);
+    } finally {
+      setIsSubmittingForm(false);
+    }
+  };
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -74,13 +105,26 @@ const UpdateSkill = () => {
             onChange={(e) => setNewSkill(e.target.value)}
             className="flex-1"
           />
-          <Button onClick={addNewSkill} className="text-white py-2 rounded-full font-medium transition">
+          <Button
+            onClick={addNewSkill}
+            className="text-white py-2 rounded-full font-medium transition"
+          >
             Add
           </Button>
         </div>
         <div className="flex w-full justify-center mt-4">
-          <Button className="text-white py-2 rounded-full font-medium transition">
-            Save Skills
+          <Button
+            onClick={UpdateSkill}
+            className=" text-white py-2 rounded-full font-medium  transition"
+          >
+            {isSubmittingForm ? (
+              <>
+                <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                Please wait...
+              </>
+            ) : (
+              " Save Changes"
+            )}
           </Button>
         </div>
       </div>

@@ -34,8 +34,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { User } from "@/types/user.types";
 
-const UpdateProfileInformation = () => {
+const UpdateProfileInformation = ({ user }: { user: User }) => {
   const [isSubmittingForm, setIsSubmittingForm] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
@@ -44,14 +45,17 @@ const UpdateProfileInformation = () => {
   const form = useForm<z.infer<typeof UpdateProfileInfoSchema>>({
     resolver: zodResolver(UpdateProfileInfoSchema),
     defaultValues: {
-      name: "",
-      location: "",
-      bio: "",
-      day: "",
-      month: "",
-      year: "",
+      name: user.name,
+      location: user.location || "",
+      bio: user.bio || "",
+      day: user.dob ? new Date(user.dob).getDate().toString() : "",
+      month: user.dob
+        ? (new Date(user.dob).getMonth() + 1).toString().padStart(2, "0")
+        : "",
+      year: user.dob ? new Date(user.dob).getFullYear().toString() : "",
     },
   });
+
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const months = [
     { value: "01", name: "January" },
@@ -73,7 +77,7 @@ const UpdateProfileInformation = () => {
   const onSubmit = async (data: z.infer<typeof UpdateProfileInfoSchema>) => {
     try {
       setIsSubmittingForm(true);
-      const response = await axios.post("/api/update/profile-info"); //TODO: Connect with backend
+      const response = await axios.post("/api/update/profile-info", data); //TODO: Connect with backend
       if (response.data.status) {
         toast({
           title: "Success",

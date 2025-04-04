@@ -7,39 +7,22 @@ import { NextRequest, NextResponse } from "next/server"
 
 
 
-//TODO:GET CONNECTED PEOPLE POST
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
-        // Decode payload from the request
         const tokenId = decodeToken(request);
-
-        // Check if the user is authenticated and verified
         if (!tokenId) {
-            return NextResponse.json({
-                success: false,
-                message: "Invalid or expired token.",
-                statusCode: 401
-            });
+            return NextResponse.json({ success: false, message: "Invalid or expired token.", statusCode: 401 });
         }
 
-        // Check if the user exists and is verified
         const user = await UserModel.findById(tokenId)?.select("-password");
         if (!user) {
-            return NextResponse.json({
-                success: false,
-                message: "User not found.",
-                statusCode: 404
-            });
+            return NextResponse.json({ success: false, message: "User not found.", statusCode: 404 });
         }
 
         if (!user.isVerified) {
-            return NextResponse.json({
-                success: false,
-                message: "User is not verified.",
-                statusCode: 401
-            });
+            return NextResponse.json({ success: false, message: "User is not verified.", statusCode: 401 });
         }
-        // Find all connected users (both requester and requestee where isAccept = true)
+
         const connections = await ConnectionModel.find({
             $or: [
                 { requester: user._id, isAccept: true },
@@ -47,14 +30,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             ]
         });
 
-        // Extract connected user IDs
         const connectedUserIds = connections.map((conn) =>
-            conn.requester.toString() === user._id.toString()
-                ? conn.requestee
-                : conn.requester
+            conn.requester.toString() === user._id.toString() ? conn.requestee : conn.requester
         );
 
-        // Fetch posts by connected users
         const posts = await PostModel.aggregate([
             { $match: { owner: { $in: connectedUserIds } } },
             {
@@ -72,20 +51,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             },
             {
                 $lookup: {
-                    from: "users", // Collection for users
+                    from: "users",
                     localField: "owner",
                     foreignField: "_id",
-                    as: "ownerDetails",
-                },
+                    as: "ownerDetails"
+                }
             },
+            { $unwind: "$ownerDetails" },
             {
-                $unwind: "$ownerDetails", // Flatten the ownerDetails array
+                $addFields: {
+                    isConnected: { $in: ["$owner", connectedUserIds] } // Check if post owner is in the connected list
+                }
             },
-            {
-                $sort: {
-                    createdAt: -1, // Newest first
-                },
-            },
+            { $sort: { createdAt: -1 } },
             {
                 $project: {
                     _id: 1,
@@ -96,12 +74,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     totalLikes: 1,
                     type: 1,
                     name: 1,
-                    ownerDetails: 1
+                    ownerDetails: 1,
+                    isConnected: 1 // Include the connection status in response
                 }
             }
         ]);
-
-        // console.log("Get all connected user post Post :", posts)
 
         return NextResponse.json({
             success: true,
@@ -111,12 +88,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         });
     } catch (error) {
         console.error("Error fetching connected users' posts:", error);
-        return NextResponse.json({
-            success: false,
-            message: "Internal Server Error",
-            statusCode: 500
-        });
+        return NextResponse.json({ success: false, message: "Internal Server Error", statusCode: 500 });
     }
 }
-
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

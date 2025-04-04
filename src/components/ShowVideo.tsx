@@ -1,9 +1,6 @@
 "use client";
-import Image from "next/image";
 import React from "react";
-import dummyImg from "@/assets/architecture.jpg";
-
-import { Button } from "./ui/button";
+import { Types } from "mongoose";
 import { IoMdHeart } from "react-icons/io";
 import { IoMdHeartEmpty } from "react-icons/io";
 import PostOwner from "./postOwner";
@@ -12,6 +9,7 @@ const ShowVideo = ({
   isUser,
   name,
   avatar,
+  id,
   isConnected = false,
 }: {
   video: any;
@@ -19,6 +17,7 @@ const ShowVideo = ({
   name: string;
   avatar: string;
   isConnected?: boolean;
+  id?: Types.ObjectId;
 }) => {
   return (
     <div className="w-full  rounded-md mt-3 overflow-hidden min-h-[5rem] p-1 border-b">
@@ -27,6 +26,7 @@ const ShowVideo = ({
         avatar={avatar}
         isUser={isUser}
         isConnected={isConnected}
+        id={id}
       />
       <video
         controls
@@ -34,10 +34,6 @@ const ShowVideo = ({
         className="mt-2 w-full h-full rounded-md max-h-[25rem]"
       />
 
-      {/* <div className="flex gap-2 cursor-pointer ">
-        <IoMdHeart width={40} height={40} />
-        <IoMdHeartEmpty />
-      </div> */}
       <p className="font-semibold text-gray-700 flex items-center text-wrap md:text-nowrap mt-1 mb-2">
         {video.description}
       </p>

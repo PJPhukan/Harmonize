@@ -20,12 +20,14 @@ const SuggestedUser = () => {
   >([]);
   const [isRefresh, setisRefresh] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     getSuggestedUser();
   }, []);
 
   const getSuggestedUser = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get("/api/suggested-user");
       if (response.data.success) {
         setSuggestedUserDetails(response.data.data);
@@ -34,12 +36,17 @@ const SuggestedUser = () => {
       }
     } catch (error) {
       setErrorMsg("Internal server error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const RefreshSuggested = async () => {
-    setisRefresh(!isRefresh);
+    await getSuggestedUser();
   };
+  useEffect(() => {
+    setisRefresh(isLoading);
+  }, [isLoading]);
 
   return (
     // TODO: Check on responsive time
@@ -70,7 +77,9 @@ const SuggestedUser = () => {
                 <SGUser user={user} key={index} />
               ))}
             {suggestedUserDetails.length == 0 && (
-              <div className="text-center mt-6 uppercase">No user found for you !</div>
+              <div className="text-center mt-6 uppercase">
+                No user found for you !
+              </div>
             )}
           </div>
         </div>

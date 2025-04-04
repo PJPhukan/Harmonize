@@ -92,55 +92,55 @@ export const UpdateAvatarSchema = z.object({
 
 
 export const UpdateProfileInfoSchema = z.object({
-    name: z.string().min(3, "Name must be at least 3 characters"),
+    name: z.string().min(3, "Name must be at least 3 characters").optional(),
     location: z.string().optional(),
     bio: z.string().min(10, "Bio must be at least 10 characters")
-        .max(500, "Bio must be at most 500 characters"),
+        .max(500, "Bio must be at most 500 characters").optional(),
 
     day: z
-        .string(),
+        .string().optional(),
     month: z
-        .string(),
+        .string().optional(),
     year: z
         .string()
         .refine((year) => {
             const currentYear = new Date().getFullYear();
             return +year > currentYear - 100 && +year <= currentYear;
-        }, { message: "Invalid year range" }),
+        }, { message: "Invalid year range" }).optional(),
 })
 
 export const UpdatePasswordSchema = z
-.object({
-    currentPassword: z.string()
-        .min(8, {
-            message: "Password must be at least 8 characters"
-        })
-        .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
-        .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
-        .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
-        .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
-    ,
-    newPassword: z.string()
-        .min(8, {
-            message: "Password must be at least 8 characters"
-        })
-        .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
-        .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
-        .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
-        .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
-    ,
-    confirmPassword: z.string()
-        .min(8, {
-            message: "Password must be at least 8 characters"
-        })
-        .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
-        .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
-        .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
-        .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
-    ,
-})
-.refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-});
+    .object({
+        currentPassword: z.string()
+            .min(8, {
+                message: "Password must be at least 8 characters"
+            })
+            .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
+            .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
+            .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
+            .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
+        ,
+        newPassword: z.string()
+            .min(8, {
+                message: "Password must be at least 8 characters"
+            })
+            .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
+            .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
+            .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
+            .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
+        ,
+        confirmPassword: z.string()
+            .min(8, {
+                message: "Password must be at least 8 characters"
+            })
+            .regex(/[a-z]+/, { message: "Password should be contain atleast one lower case" })
+            .regex(/[A-Z]+/, { message: "Password should be contain atleast one upper case" })
+            .regex(/[0-9]+/, { message: "Password should be contain atleast one number" })
+            .regex(/[^a-zA-Z0-9]+/, { message: "Password should be contain atleast one speacial character" })
+        ,
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
 

@@ -1,39 +1,29 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+
 import { useState } from "react";
+import { z } from "zod";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { toast as SonnerToast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
+import { useUploadFile } from "@/hooks/use-upload-file";
 import { AvatarUploader } from "./media/file-avatar-uploader";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateAvatarSchema } from "@/schemas/user.Schema";
-import { z } from "zod";
-import { toast as SonnerToast } from "sonner";
-import axios from "axios";
-import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@/lib/handle-error";
-import { useUploadFile } from "@/hooks/use-upload-file";
+import { User } from "@/types/user.types";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 
-const UpdateAvatar = () => {
+const UpdateAvatar = ({ user }: { user: User }) => {
   const [isSubmittingForm, setIsSubmittingForm] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
@@ -56,7 +46,7 @@ const UpdateAvatar = () => {
         if (data && dt && dt[0]?.url) {
           data.avatarURL = dt[0].url;
         }
-        const response = await axios.post(`/api/update/avatar`, data); //TODO: Make the route and check wheather its correctly working or not
+        const response = await axios.post(`/api/update/avatar`, data);
         if (response.data.status) {
           toast({
             title: "Success",
@@ -112,18 +102,15 @@ const UpdateAvatar = () => {
                         maxSize={4 * 1024 * 1024}
                         progresses={progresses}
                         disabled={isUploading || isSubmittingForm}
+                        url={user.avatar ? user.avatar : ""}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <p className="font-semibold text-lg">Parag jyoti phukan</p>
-              <p className="font-light text-sm text-center">
-                Hi 👋🏻👋🏻... My name is Paragjyoti Phukan. I am a Bachelor of
-                Science in Information Technology Student ,and also I am
-                beginner of a Full Stack Web Developer.
-              </p>
+              <p className="font-semibold text-lg">{user.name}</p>
+              <p className="font-light text-sm text-center">{user.bio}</p>
             </div>
             <div className="flex w-full justify-center">
               <Button

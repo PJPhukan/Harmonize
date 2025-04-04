@@ -27,8 +27,9 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { User } from "@/types/user.types";
 
-const UpdatePassword = () => {
+const UpdatePassword = ({ user }: { user: User }) => {
   const [isSubmittingForm, setIsSubmittingForm] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
@@ -49,7 +50,7 @@ const UpdatePassword = () => {
   const onSubmit = async (data: z.infer<typeof UpdatePasswordSchema>) => {
     try {
       setIsSubmittingForm(true);
-      const response = await axios.post("/api/update/password"); //TODO: Connect with backend
+      const response = await axios.post("/api/update/password", data); 
       if (response.data.status) {
         toast({
           title: "Success",

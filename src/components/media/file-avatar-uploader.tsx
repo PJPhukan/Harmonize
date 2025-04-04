@@ -23,6 +23,7 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   maxFileCount?: number;
   multiple?: boolean;
   disabled?: boolean;
+  url?: string;
 }
 
 export function AvatarUploader(props: FileUploaderProps) {
@@ -37,6 +38,7 @@ export function AvatarUploader(props: FileUploaderProps) {
     maxFileCount = 1,
     multiple = false,
     disabled = false,
+    url,
     className,
     ...rest
   } = props;
@@ -113,18 +115,23 @@ export function AvatarUploader(props: FileUploaderProps) {
   }, [files]);
 
   const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount;
-
+  const customLoader = ({ src }: { src: string }) => src;
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden">
       <div className="h-32 w-32 mr-4 relative bg-gray-100 rounded-full">
         <Image
           src={
-            files && files.length > 0 ? URL.createObjectURL(files[0]) : profile
+            files && files.length > 0
+              ? URL.createObjectURL(files[0])
+              : url
+              ? url
+              : profile
           }
           width={128}
           height={128}
           alt=""
-          className="h-full w-full z-10 rounded-full"
+          className="h-full w-full z-10 rounded-full object-none"
+          loader={customLoader}
         ></Image>
         <label
           htmlFor="avatar"

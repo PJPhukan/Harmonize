@@ -1,10 +1,9 @@
 "use client";
+
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
-import Image from "next/image";
-import React from "react";
-import dummyImg from "@/assets/architecture.jpg";
-import { Button } from "./ui/button";
+import { Types } from "mongoose";
 import { Pause, Play } from "lucide-react";
 import { IoMdHeart } from "react-icons/io";
 import { IoMdHeartEmpty } from "react-icons/io";
@@ -14,12 +13,14 @@ const ShowAudioTrack = ({
   isUser,
   name,
   avatar,
+  id,
   isConnected = false,
 }: {
   audio: any;
   isUser: boolean;
   name: string;
   avatar: string;
+  id?: Types.ObjectId;
   isConnected?: boolean;
 }) => {
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -42,17 +43,15 @@ const ShowAudioTrack = ({
       });
 
       ws.on("ready", () => {
-        setDuration(ws.getDuration()); // Set the total duration when ready
-        // console.log("Waveform ready");
+        setDuration(ws.getDuration());
       });
 
       ws.on("audioprocess", () => {
-        setCurrentTime(ws.getCurrentTime()); // Update current play time
+        setCurrentTime(ws.getCurrentTime());
       });
 
       ws.on("finish", () => {
-        // console.log("Playback finished");
-        setCurrentTime(0); // Reset play time when playback finishes
+        setCurrentTime(0);
       });
 
       setWavesurfer(ws);
@@ -80,6 +79,7 @@ const ShowAudioTrack = ({
         avatar={avatar}
         isUser={isUser}
         isConnected={isConnected}
+        id={id}
       />
       <div className="flex gap-3 items-center  justify-start bg-gray-200 p-2 rounded-md mt-1">
         <div className="h-[6rem] w-[8rem] bg-red-500 flex justify-center items-center rounded-md">
